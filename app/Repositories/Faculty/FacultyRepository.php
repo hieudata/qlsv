@@ -11,8 +11,13 @@ class FacultyRepository extends BaseRepository implements FacultyRepositoryInter
     {
         return \App\Models\Faculty::class;
     }
-    public function getFaculty()
+
+    public function newFaculty()
     {
-        return Faculty::paginate(5);
+        return new Faculty();
+    }
+    public function pluck()
+    {
+        return Faculty::pluck('name', 'id');
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreFacultyRequest;
 use App\Repositories\Faculty\FacultyRepositoryInterface;
 
 class FacultyController extends Controller
@@ -20,7 +20,7 @@ class FacultyController extends Controller
      */
     public function index()
     {
-        $faculties = $this->facultyRepo->getFaculty();
+        $faculties = $this->facultyRepo->paginate();
         return view('faculties.index', compact('faculties'));
     }
 
@@ -31,7 +31,8 @@ class FacultyController extends Controller
      */
     public function create()
     { 
-        return view('faculties.create');
+        $faculty = $this->facultyRepo->newFaculty();
+        return view('faculties.form', compact('faculty'));
     }
 
     /**
@@ -40,11 +41,8 @@ class FacultyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreFacultyRequest $request)
     {
-        $request->validate([
-            'name' => 'required',
-        ]);
         $this->facultyRepo->create($request->all());
         return redirect()->route('faculties.index')->with('success', 'Create Successful');
     }
@@ -70,7 +68,7 @@ class FacultyController extends Controller
     public function edit($id)
     {
         $faculty = $this->facultyRepo->find($id);
-        return view('faculties.edit', compact('faculty'));
+        return view('faculties.form', compact('faculty'));
     }
 
     /**
@@ -80,13 +78,10 @@ class FacultyController extends Controller
      * @param  \App\Models\Faculty  $faculty
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'name' => 'required',
-        ]);      
+    public function update(StoreFacultyRequest $request, $id)
+    {     
         $faculty = $this->facultyRepo->find($id);
-        $faculty->fill($request->all());
+        $faculty->update($request->all());
         $faculty->save();
         return redirect()->route('faculties.index')->with('success', 'Update Successful');
     }
@@ -100,7 +95,6 @@ class FacultyController extends Controller
     public function destroy($id)
     {
         $this->facultyRepo->delete($id);
-
         return redirect()->route('faculties.index')->with('success', 'Detele Successful');
     }
 }

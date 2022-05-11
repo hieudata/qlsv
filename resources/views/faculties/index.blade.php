@@ -5,10 +5,10 @@
     <div class="container-fluid">
         <div class="card shadow mb-3">
             <div class="card-header py-3">
-                <h3 class="m-0 font-weight-bold text-primary">Faculty CRUD</h3>
+                <h3 class="m-0 font-weight-bold text-primary">Faculty List</h3>
 
                 <div class="float-right">
-                    <a class="btn btn-success" href="{{ route('faculties.create') }}"> Create New Faculty</a>
+                    <a class="btn btn-success" href="{{ route('faculties.create') }}"> Create Faculty</a>
                 </div>
             </div>
             @yield('success')
@@ -38,6 +38,7 @@
                                         {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
 
                                         {!! Form::close() !!}
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>

@@ -9,5 +9,17 @@ class Faculty extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['id','name'];
+    protected $fillable = ['name'];
+
+    public function url()
+    {
+        return $this->id ? 'faculties.update' : 'faculties.store'; 
+    }
+
+
+    public function method()
+    {
+        return $this->id ? 'PUT' : 'POST'; 
+    }
+
 }
