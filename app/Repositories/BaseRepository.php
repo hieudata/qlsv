@@ -4,7 +4,6 @@ namespace App\Repositories;
 
 use App\Repositories\RepositoryInterface;
 
-
 abstract class BaseRepository implements RepositoryInterface
 {
     protected $model;
@@ -15,7 +14,7 @@ abstract class BaseRepository implements RepositoryInterface
     }
 
     abstract public function getModel();
-    
+
     public function setModel()
     {
         $this->model = app()->make($this->getModel());
@@ -26,6 +25,14 @@ abstract class BaseRepository implements RepositoryInterface
         return $this->model->all();
     }
 
+    public function paginate()
+    {
+        return $this->model->paginate(5);
+    }
+    // public function pluck()
+    // {
+    //     return $this->model->pluck('name', 'id');
+    // }
     public function find($id)
     {
         $result = $this->model->findOrFail($id);
@@ -58,5 +65,4 @@ abstract class BaseRepository implements RepositoryInterface
         }
         return false;
     }
-    
 }

@@ -7,6 +7,6 @@
     <title>Document</title>
 </head>
 <body>
-    <a href=""></a>
+    <a href="<?php echo route('welcome'); ?>">Show form</a>
 </body>
 </html>
