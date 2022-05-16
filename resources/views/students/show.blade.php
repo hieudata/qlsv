@@ -12,9 +12,8 @@
                     </div>
                 </div>
                 <form action="" method="GET">
-                    <a class="btn btn-success m-3" href="{{ route('subject', $student->id) }}" role="button">Add
+                    <a class="btn btn-success m-3" href="{{ route('add', $student->id) }}" role="button">Add
                         subject</a>
-                    <a class="btn btn-success m-3" href="#" role="button">Update point</a>
                 </form>
             </div>
             <div class="row p-2">
@@ -26,7 +25,11 @@
                 <div class="col-lg-3 m-4"><strong>Email: </strong>{{ $student->email }}</div>
                 <div class="col-lg-3 m-4"><strong>Day of Birthday: </strong>{{ $student->birthday }}</div>
                 <div class="col-lg-3 m-4"><strong>Faculty: </strong>{{ $student->faculty->name }}</div>
-                <div class="col-lg-3 m-4"><strong>Registered the subject: </strong></div>
+                <div class="col-lg-3 m-4"><strong>Registered the subject: </strong>
+                    @foreach ($student->subjects as $subject)
+                        {{ $subject->name }}
+                    @endforeach
+                </div>
             </div>
         </div>
     </div>

@@ -20,7 +20,7 @@ class Student extends Model
 
     public function faculty()
     {
-        return $this->hasMany(Faculty::class);
+        return $this->belongsTo(Faculty::class);
     }
     /**
      * The subjects that belong to the Student
@@ -29,6 +29,6 @@ class Student extends Model
      */
     public function subjects()
     {
-        return $this->belongsToMany(Subject::class, 'student_subject', 'student_id', 'subject_id');
+        return $this->belongsToMany(Subject::class, 'student_subject', 'student_id', 'subject_id')->withPivot('point');
     }
 }

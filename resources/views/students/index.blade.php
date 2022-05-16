@@ -5,7 +5,6 @@
         <div class="card shadow mb-3">
             <div class="card-header py-3">
                 <h3 class="m-0 font-weight-bold text-primary">Student List</h3>
-
                 <div class="float-right">
                     <a class="btn btn-success" href="{{ route('students.create') }}"> Create Student</a>
                 </div>
@@ -30,7 +29,7 @@
                         <tbody>
                             @foreach ($students as $key => $student)
                                 <tr>
-                                    <td>{{ ++$i }}</td>
+                                    <td>{{ ++$key }}</td>
                                     <td><img src="{{ asset($student->avatar) }}" alt="" width="100px"></td>
                                     <td>{{ $student->name }}</td>
                                     <td>{{ $student->phone }}</td>
@@ -42,12 +41,9 @@
                                         {!! Form::model($student, ['route' => ['students.destroy', $student->id], 'method' => 'DELETE']) !!}
                                         <a class="btn btn-info"
                                             href="{{ route('students.show', $student->id) }}">Show</a>
-
                                         <a class="btn btn-primary"
                                             href="{{ route('students.edit', $student->id) }}">Edit</a>
-
                                         {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
-
                                         {!! Form::close() !!}
                                 </tr>
                             @endforeach

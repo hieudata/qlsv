@@ -1,5 +1,4 @@
 @extends('layouts.main')
-
 @section('content')
     <div class="container-fluid">
         <div class="card shadow m-3 p-3">
