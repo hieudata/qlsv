@@ -1,6 +1,6 @@
 @extends('layouts.main')
 @section('content')
-    <div class="container-fluid">
+    <main id="main" class="main">
         <div class="card shadow m-3 p-3">
             <div class="row">
                 <div class="col-lg-12">
@@ -22,5 +22,9 @@
                 </div>
             </div>
         </div>
-    </div>
+    </main>
+
+    <script>
+        
+    </script>
 @endsection

@@ -6,6 +6,8 @@ interface RepositoryInterface
 {
     public function getAll();
 
+    public function query();
+
     public function paginate();
 
     public function find($id);

@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreFacultyRequest;
+use App\Models\Faculty;
 use App\Repositories\Faculty\FacultyRepositoryInterface;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class FacultyController extends Controller
 {
     protected $facultyRepo;
+
 
     public function __construct(FacultyRepositoryInterface $facultyRepo)
     {
@@ -30,7 +34,7 @@ class FacultyController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    { 
+    {
         $faculty = $this->facultyRepo->newFaculty();
         return view('faculties.form', compact('faculty'));
     }
@@ -56,6 +60,9 @@ class FacultyController extends Controller
     public function show($id)
     {
         $faculty = $this->facultyRepo->find($id);
+        if (!Gate::allows('show-faculty', $faculty)) {
+            $x = 'You have no business to do that';
+        }
         return view('faculties.show', compact('faculty'));
     }
 
@@ -79,7 +86,7 @@ class FacultyController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(StoreFacultyRequest $request, $id)
-    {     
+    {
         $faculty = $this->facultyRepo->find($id);
         $faculty->update($request->all());
         $faculty->save();

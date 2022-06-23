@@ -1,12 +1,17 @@
 @extends('layouts.main')
 @include('layouts.flash_message')
 @section('content')
-    <div class="container-fluid">
+    <main id="main" class="main">
         <div class="card shadow mb-3">
-            <div class="card-header py-3">
-                <h3 class="m-0 font-weight-bold text-primary">Faculty List</h3>
-                <div class="float-right">
-                    <a class="btn btn-success" href="{{ route('faculties.create') }}"> Create Faculty</a>
+            <div class="card-header py-3 bg-light">
+                <div class="row">
+                    <div class="col">
+                        <h3 class="fw-bold text-primary">Faculty List</h3>
+                    </div>
+                    <div class="col">
+                        <a class="btn btn-success float-end" href="{{ route('faculties.create') }}"><i
+                                class="fa-solid fa-circle-plus"></i></a>
+                    </div>
                 </div>
             </div>
             @yield('success')
@@ -21,17 +26,21 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($faculties as $key =>$faculty)
+                            @foreach ($faculties as $key => $faculty)
                                 <tr>
                                     <td>{{ ++$key }}</td>
                                     <td>{{ $faculty->name }}</td>
                                     <td>
                                         {!! Form::model($faculty, ['route' => ['faculties.destroy', $faculty->id], 'method' => 'DELETE']) !!}
-                                        <a class="btn btn-info"
-                                            href="{{ route('faculties.show', $faculty->id) }}">Show</a>
-                                        <a class="btn btn-primary"
-                                            href="{{ route('faculties.edit', $faculty->id) }}">Edit</a>
-                                        {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
+                                        <a class="btn btn-info" href="{{ route('faculties.show', $faculty->id) }}"><i
+                                                class="fa-regular fa-eye"></i></a>
+                                        <a class="btn btn-warning" href="{{ route('faculties.edit', $faculty->id) }}"><i
+                                                class="fa-regular fa-pen-to-square"></i></a>
+                                        @if (Auth::check())
+                                            {!! Form::button('<i class="fa-regular fa-trash-can"></i>', ['type' => 'submit', 'class' => 'btn btn-danger']) !!}
+                                        @endif
+                                        {{-- <button type="submit" class="btn btn-danger"><i
+                                                class="fa-regular fa-trash-can"></i></button> --}}
                                         {!! Form::close() !!}
                                     </td>
                                 </tr>
@@ -44,5 +53,5 @@
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 @endsection

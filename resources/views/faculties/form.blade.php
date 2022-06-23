@@ -1,7 +1,8 @@
 @extends('layouts.main')
 @include('layouts.flash_message')
 @section('content')
-    <div class="container-fluid">
+<main id="main" class="main">
+
         <div class="card shadow m-3 p-3">
             <div class="row">
                 <div class="col-lg-12 margin-tb">
@@ -24,5 +25,5 @@
             </div>
             {!! Form::close() !!}
         </div>
-    </div>
+</main>
 @endsection

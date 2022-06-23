@@ -23,9 +23,15 @@ class StoreFacultyRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        $data = [
             'name' => 'required|unique:faculties',
         ];
+
+        if (!empty(request()->route('faculty'))){
+            $data['name'] = 'required|unique:faculties';
+        }
+
+        return $data;
     }
     public function messages()
     {

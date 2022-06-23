@@ -20,6 +20,7 @@ class CreateStudentsTable extends Migration
             $table->string('phone',15);
             $table->tinyInteger('gender');
             $table->string('email',55);
+            $table->string('password',70);
             $table->date('birthday');
             $table->integer('faculty_id')->unsigned();
             $table->foreign('faculty_id')->references('id')->on('faculties');

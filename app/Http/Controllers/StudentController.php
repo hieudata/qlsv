@@ -3,12 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StudentRequest;
-use App\Models\Student;
-use App\Models\Subject;
 use App\Repositories\Student\StudentRepositoryInterface;
 use App\Repositories\Faculty\FacultyRepositoryInterface;
 use App\Repositories\Subject\SubjectRepositoryInterface;
-use GuzzleHttp\Psr7\Request;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Models\Student;
+use Cviebrock\EloquentSluggable\Services\SlugService;
+use App\Mail\MyTestMail;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Session;
 
 class StudentController extends Controller
 {
@@ -20,16 +26,24 @@ class StudentController extends Controller
         $this->facultyRepo = $facultyRepo;
         $this->subjectRepo = $subjectRepo;
     }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $students = $this->studentRepo->paginate();
-        // dd($students);
-        return view('students.index', compact('students'));
+        // $subjectTotal = 0;
+
+        // if (!empty($request['category'])) {
+        //     $subjectTotal = Subject::count('id');
+        // }
+
+        $students = $this->studentRepo->search($request->all());
+        $faculties = $this->facultyRepo->pluck();
+
+        return view('students.index', compact('students', 'faculties'));
     }
 
     /**
@@ -52,14 +66,16 @@ class StudentController extends Controller
      */
     public function store(StudentRequest $request)
     {
-        $request->validate(['avatar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048']);
+        // $request->validate(['avatar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048']);
         $input = $request->all();
         if ($avatar = $request->file('avatar')) {
-            $profileImage = 'images/' . rand(1111, 9999) . "." . $avatar->getClientOriginalExtension();
+            $profileImage = rand(1111, 9999) . "." . $avatar->getClientOriginalExtension();
             $avatar->move('images', $profileImage);
             $input['avatar'] = "$profileImage";
+        } else {
+            $input['avatar'] = 'default.png';
         }
-
+        // $input['password'] = Str::random(10);
         $this->studentRepo->create($input);
         return redirect()->route('students.index')->with('success', 'Create Successful');
     }
@@ -70,10 +86,8 @@ class StudentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Student $student)
     {
-        $student = $this->studentRepo->find($id);
-        // dd($student);
         return view('students.show', compact('student'));
     }
 
@@ -85,10 +99,9 @@ class StudentController extends Controller
      */
     public function edit($id)
     {
-        // $student = $this->studentRepo->find($id);
         return view('students.form', [
             'student' => $this->studentRepo->find($id),
-            'faculties' => $this->facultyRepo->pluck()
+            'faculties' => $this->facultyRepo->pluck('name', 'id')
         ]);
     }
 
@@ -103,16 +116,17 @@ class StudentController extends Controller
     {
         $student = $this->studentRepo->find($id);
         $input = $request->all();
+        $input['slug'] = SlugService::createSlug($student, 'slug', $request->name);
         if ($avatar = $request->file('avatar')) {
-            $profileImage = 'images/' . rand(1111, 9999) . "." . $avatar->getClientOriginalExtension();
+            $profileImage = rand(1111, 9999) . "." . $avatar->getClientOriginalExtension();
             $avatar->move('images/', $profileImage);
             $input['avatar'] = "$profileImage";
+            unlink('images/' . $student->avatar);
         } else {
             unset($input['avatar']);
         }
         $student->update($input);
-        // dd($student);
-        return redirect()->back()->with('success', 'Update Successful');
+        return redirect()->route('students.index')->with('success', 'Update Successful');
     }
 
     /**
@@ -124,22 +138,187 @@ class StudentController extends Controller
     public function destroy($id)
     {
         $this->studentRepo->delete($id);
-
         return redirect()->route('students.index')->with('success', 'Detele Successful');
     }
 
-    public function addsub(Request $request, $id)
+    // Login Student
+    public function login()
     {
-        $student = Student::findOrFail($id);
+        return view('students.login');
+    }
+
+    public function check(Request $request)
+    {
+        //Validate requests
         $request->validate([
-            'subjects' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|min:5|max:12'
         ]);
 
-        $student->subjects()->attach($request->subjects);
-        return redirect()->route('students.add');
-        // $student = Student::findOrFail($id);
-        // $student->subjects()->attach();
-        // // dd($student);
-        // return view('students.add', compact('student'));
+        $student = $this->studentRepo->query()->where('email', '=', $request->email)->first();
+
+        if (!$student) {
+            return back()->with('fail', 'We do not recognize your email address');
+        } else {
+            //check password
+            if ($request->password == $student->password) {
+                $request->session()->put('LoggedUser', $student->id);
+                return redirect('student/dashboard');
+                // return "Done";
+
+            } else {
+                return back()->with('fail', 'Incorrect password');
+            }
+        }
+    }
+
+    public function dashboard()
+    {
+        // $data = ['LoggedUserInfo'=>$this->studentRepo->query()->where('id','=', session('LoggedUser'))->first()];
+        $student = $this->studentRepo->query()->where('id', '=', session('LoggedUser'))->first();
+        if ($student) {
+            return view('students.dashboard', compact('student'));
+        } else {
+            echo "<h3>You must log in your account. <a href='login'>Login now</a></h3>";
+        }
+    }
+
+    public function logout()
+    {
+        if (session()->has('LoggedUser')) {
+            session()->pull('LoggedUser');
+            return redirect('student/login');
+        }
+    }
+    // Register and Login Page Admin
+    public function registerAdmin()
+    {
+        return view('students.login');
+    }
+
+    public function checkAdmin(Request $request)
+    {
+        //Validate requests
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|min:5|max:12'
+        ]);
+
+        $student = $this->studentRepo->query()->where('email', '=', $request->email)->first();
+
+        if (!$student) {
+            return back()->with('fail', 'We do not recognize your email address');
+        } else {
+            //check password
+            if ($request->password == $student->password) {
+                $request->session()->put('LoggedUser', $student->id);
+                return redirect('student/dashboard');
+                // return "Done";
+
+            } else {
+                return back()->with('fail', 'Incorrect password');
+            }
+        }
+    }
+
+    // Send Mail
+
+    public function sendmail()
+    {
+        $students = $this->studentRepo->query()->withAvg('studentSubject', 'point')
+            ->having('student_subject_avg_point', '<', 5)->get();
+        foreach ($students as $student) {
+            Mail::to($student->email)->send(new MyTestMail($student));
+        }
+        dd("Email is Sent.");
+    }
+
+    // Ajax update popup
+    public function getStudent($id)
+    {
+        $student = Student::find($id);
+        return response()->json($student);
+    }
+
+    public function updateStudent(Request $request)
+    {
+        $student = Student::find($request->id);
+        $input = $request->all();
+        $input['slug'] = SlugService::createSlug(Student::class, 'slug', $request->name);
+        if ($avatar = $request->file('avatar')) {
+            $profileImage = rand(1111, 9999) . "." . $avatar->getClientOriginalExtension();
+            $avatar->move('images/', $profileImage);
+            $input['avatar'] = "$profileImage";
+            unlink('images/' . $student->avatar);
+        } else {
+            unset($input['avatar']);
+        }
+        $student->update($input);
+        return response()->json($student);
+    }
+
+    //Localization
+    public function setLang($locale)
+    {
+        App::setLocale($locale);
+        Session::put('locale', $locale);
+        return redirect()->back();
+    }
+
+    // Add&Edit Subject
+    public function addSubject($id)
+    {
+        $student = $this->studentRepo->find($id);
+        $subjects = $this->subjectRepo->getAll();
+        return view('student_subject.addSubject', compact('student', 'subjects'));
+    }
+
+    public function saveSubject(Request $request, $id)
+    {
+        $student = $this->studentRepo->find($id);
+        $this->validate($request, [
+            'subjects' => 'required',
+        ]);
+        $student->subjects()->sync($request->subjects);
+        return redirect()->route('students.show', ['student' => $student->id])->with('success', 'Succesful');
+    }
+
+    // Update Point
+    public function updatePoint($id)
+    {
+        $student = Student::find($id);
+        return view('student_subject.updatePoint', compact('student'));
+    }
+
+    public function savePoint(Request $request)
+    {
+        // $student = Student::find($id);
+        // $points = $request->points;
+        // $perm = [];
+        // foreach ($points as $point) {
+        //     $perm[] = $point;
+        //     $student->subjects()->syncWithoutDetaching($perm);
+        // }
+        // $student->save();
+        $data = [];
+        foreach ($request->subject_id as $key => $value) {
+            array_push($data, [
+                'subject_id' => $request->subject_id[$key],
+                'point' => $request->point[$key],
+            ]);
+        }
+
+        $marks = [];
+        foreach ($data as $key => $value) {
+            $marks[$value['subject_id']] = ['point' => $value['point']];
+        }
+        $this->studentRepo->find($request->student_id)->subjects()->syncWithoutDetaching($marks);
+        return redirect()->route('students.show');
+    }
+    // Generate SEO-Friendly URL Slug Automatically
+    public function checkSlug()
+    {
+        $slug = SlugService::createSlug(Student::class, 'slug', request('name'));
+        return response()->json(['slug' => $slug]);
     }
 }

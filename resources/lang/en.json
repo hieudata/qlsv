@@ -1,0 +1,19 @@
+{
+    "student manage": "Student Manage",
+    "dashboard": "Dashboard",
+    "student list": "Student List",
+    "faculty list": "Faculty List",
+    "subject list": "Subject List",
+    "avatar": "Avatar",
+    "name": "Full Name",
+    "phone": "Phone",
+    "gender": "Gender",
+    "day of birthday": "Day of Birthday",
+    "faculty": "Faculty",
+    "action": "Action",
+    "languages": "Languages",
+    "range age": "Enter range age",
+    "range point": "Enter range point",
+    "select brand" :"Select brand",
+    "select category":"Select category"
+}

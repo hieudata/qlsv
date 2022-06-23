@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Document</title>
+</head>
+<body>
+    <img src="{{ asset('images/'.$students->avatar) }}" alt="" width="50px" class="rounded-circle">
+    <h1>Dear {{ $students->name }},</h1>
+    <h3>Cảnh cáo học tập, bạn đang có điểm TB < 5</h3>
+    <p>Thanh you!</p>
+</body>
+</html>

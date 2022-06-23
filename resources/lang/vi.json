@@ -1,0 +1,19 @@
+{
+    "student manage": "Quản lý sinh viên",
+    "dashboard": "Bảng quản trị",
+    "student list": "Sinh viên",
+    "faculty list": "Khoa",
+    "subject list": "Môn học",
+    "avatar": "Ảnh đại diện",
+    "name": "Họ tên",
+    "phone": "Số điện thoại",
+    "gender": "Giới tính",
+    "day of birthday": "Năm sinh",
+    "faculty": "Khoa",
+    "action": "Chức năng",
+    "languages": "Ngôn ngữ",
+    "range age": "Nhập tuổi",
+    "range point": "Nhập điểm",
+    "select brand" :"Chọn hãng",
+    "select category":"Chọn mục"
+}

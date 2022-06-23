@@ -25,6 +25,10 @@ abstract class BaseRepository implements RepositoryInterface
         return $this->model->all();
     }
 
+    public function query() {
+        return $this->model->query();
+    }
+
     public function paginate()
     {
         return $this->model->paginate(5);
@@ -35,9 +39,7 @@ abstract class BaseRepository implements RepositoryInterface
     // }
     public function find($id)
     {
-        $result = $this->model->findOrFail($id);
-
-        return $result;
+        return $this->model->findOrFail($id);
     }
 
     public function create($attributes = [])
@@ -49,7 +51,7 @@ abstract class BaseRepository implements RepositoryInterface
     {
         $result = $this->find($id);
         if ($result) {
-            $result->update($attributes);
+            $result->updateOrCreate($attributes);
             return $result;
         }
 

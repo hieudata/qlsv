@@ -16,8 +16,8 @@ class CreateStudentSubjectTable extends Migration
         Schema::create('student_subject', function (Blueprint $table) {
             $table->integer('student_id')->unsigned();
             $table->integer('subject_id')->unsigned();
-            $table->float('point', 8, 2);
-            $table->foreign('student_id')->references('id')->on('students');
+            $table->float('point', 8, 2)->default(0);
+            $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('subject_id')->references('id')->on('subjects');
             $table->timestamps();
         });
