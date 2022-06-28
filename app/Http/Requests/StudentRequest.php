@@ -30,7 +30,7 @@ class StudentRequest extends FormRequest
             'phone' => 'required|unique:students,phone',
             'gender' => 'required',
             'email' => 'required|email|unique:students,email',
-            'birthday' => 'required',
+            'birthday' => 'required|date|date_format:Y-m-d',
             'faculty_id' => 'required',
         ];
 

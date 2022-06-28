@@ -31,7 +31,6 @@
                 </div>
                 <div class="col-md-6">
                     {!! Form::label('gender', 'Gender', ['class' => 'd-block mb-2']) !!}
-                    {{-- {!! Form::select('gender', ['1' => 'Nam', '0' => 'Nữ'], null, ['class' => 'form-control', 'placeholder' => '']) !!} --}}
                     <input type=radio name="gender" value="1" {{ $student->gender == '1' ? 'checked' : '' }}>Male
                     <input type=radio name="gender" value="0" {{ $student->gender == '0' ? 'checked' : '' }}>Female
                 </div>

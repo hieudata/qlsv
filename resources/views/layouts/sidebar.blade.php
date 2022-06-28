@@ -41,7 +41,7 @@
                     <span class="badge bg-success badge-number">3</span>
                 </a><!-- End Messages Icon -->
             </li><!-- End Messages Nav -->
-            @if (Auth::check())
+            @auth
                 <li class="nav-item dropdown pe-3">
                     <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#"
                         data-bs-toggle="dropdown">
@@ -90,7 +90,7 @@
                     <a href="{{ route('signout') }}">| Login | </a>
                     <a href="#">Register</a>
                 </div>
-            @endif
+            @endauth
             <!-- End Profile Nav -->
         </ul>
     </nav><!-- End Icons Navigation -->

@@ -15,41 +15,36 @@
                 </div>
             </div>
             @yield('success')
-            {!! Form::open(['route' => 'students.index', 'method' => 'GET', 'enctype' => 'multipart/form-data', 'class' => 'm-3', 'id' => 'newForm']) !!}
-            @csrf
+            {!! Form::open(['route' => 'students.index', 'method' => 'GET', 'enctype' => 'multipart/form-data', 'class' => 'm-3', 'id' => 'newForm']) !!}    
             <div class="row">
                 <div class="d-flex flex-row bd-highlight m-1">
                     <label class="m-1">@lang('range age'):</label>
-                    <input class="m-1" type="number" name="age_from" placeholder="Age From">
-                    <input class="m-1" type="number" name="age_to" placeholder="Age To">
+                    {!! Form::number("age_from", null, ['class'=>'m-1', 'placeholder' => "Age From"]) !!}
+                    {!! Form::number("age_to", null, ['class'=>'m-1', 'placeholder' => "Age To"]) !!}
                 </div>
                 <div class="d-flex flex-row bd-highlight m-1">
                     <label class="m-1">@lang('range point'):</label>
-                    <input class="m-1" type="number" name="point_from" placeholder="Point From">
-                    <input class="m-1" type="number" name="point_to" placeholder="Point To">
+                    {!! Form::number("point_from", null, ['class'=>'m-1', 'placeholder' => "Point From"]) !!}
+                    {!! Form::number("point_to", null, ['class'=>'m-1', 'placeholder' => "Point To"]) !!}
                 </div>
                 <div class="d-flex flex-row bd-highlight m-1">
                     <label class="mx-1">@lang('select brand'): </label>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" name="viettel">
+                        {!! Form::checkbox("viettel", null, request()->viettel == "on"?"checked":"", ['class'=>'form-check-input']) !!}
                         <label class="form-check-label">Viettel</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" name="mobi">
+                        {!! Form::checkbox("mobi", null, request()->mobi == "on"?"checked":"", ['class'=>'form-check-input']) !!}
                         <label class="form-check-label">Mobi</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" name="vina">
+                        {!! Form::checkbox("vina", null, request()->vina == "on"?"checked":"", ['class'=>'form-check-input']) !!}
                         <label class="form-check-label">Vina</label>
                     </div>
                 </div>
                 <div class="d-flex flex-row bd-highlight m-1">
                     <label class="m-1">@lang('select category'): </label>
-                    <select class="m-1" name="category" id="category">
-                        <option selected disabled>--Choose--</option>
-                        <option value="1">Study All</option>
-                        <option value="2">Not All</option>
-                    </select>
+                    {!! Form::select("category", ['1'=>'Study All', '2'=>'Not All'], null, ['placeholder' => '--Choose--', 'class'=>'m-1', 'id'=>'category']) !!}
                 </div>
             </div>
             <button type="submit" class="btn btn-primary m-1"><i class="fa-solid fa-filter"></i></button>
@@ -59,7 +54,7 @@
             {!! Form::close() !!}
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+                    <table class="table table-sm table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
                         <thead class="table-primary">
                             <tr>
                                 <th>#</th>

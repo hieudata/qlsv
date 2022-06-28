@@ -236,13 +236,13 @@ class StudentController extends Controller
     // Ajax update popup
     public function getStudent($id)
     {
-        $student = Student::find($id);
+        $student = $this->studentRepo->find($id);
         return response()->json($student);
     }
 
     public function updateStudent(Request $request)
     {
-        $student = Student::find($request->id);
+        $student = $this->studentRepo->find($request->id);
         $input = $request->all();
         $input['slug'] = SlugService::createSlug(Student::class, 'slug', $request->name);
         if ($avatar = $request->file('avatar')) {
@@ -286,20 +286,12 @@ class StudentController extends Controller
     // Update Point
     public function updatePoint($id)
     {
-        $student = Student::find($id);
+        $student = $this->studentRepo->find($id);
         return view('student_subject.updatePoint', compact('student'));
     }
 
-    public function savePoint(Request $request)
+    public function savePoint(Request $request, $id)
     {
-        // $student = Student::find($id);
-        // $points = $request->points;
-        // $perm = [];
-        // foreach ($points as $point) {
-        //     $perm[] = $point;
-        //     $student->subjects()->syncWithoutDetaching($perm);
-        // }
-        // $student->save();
         $data = [];
         foreach ($request->subject_id as $key => $value) {
             array_push($data, [
@@ -307,18 +299,12 @@ class StudentController extends Controller
                 'point' => $request->point[$key],
             ]);
         }
-
-        $marks = [];
+        $points = [];
         foreach ($data as $key => $value) {
-            $marks[$value['subject_id']] = ['point' => $value['point']];
+            $points[$value['subject_id']] = ['point' => $value['point']];
         }
-        $this->studentRepo->find($request->student_id)->subjects()->syncWithoutDetaching($marks);
-        return redirect()->route('students.show');
-    }
-    // Generate SEO-Friendly URL Slug Automatically
-    public function checkSlug()
-    {
-        $slug = SlugService::createSlug(Student::class, 'slug', request('name'));
-        return response()->json(['slug' => $slug]);
+        $this->studentRepo->find($id)->subjects()->syncWithoutDetaching($points);
+
+        return redirect()->route('students.index');
     }
 }

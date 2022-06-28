@@ -32,22 +32,6 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
             $student->where('birthday', '>=', Carbon::now()->subYears($request['age_to']));
         }
 
-        // Phone
-
-        // $viettel = ['^037', '^038', '^039', '^036'];
-        // $mobi = ['^070', '^079', '^078', '^077'];
-        // $vina = ['^081', '^082', '^083', '^084'];
-
-        // if (!empty($request['viettel'])) {
-        //     $student->orwhere("phone", "REGEXP", implode("|", $viettel));
-        // }
-        // if (!empty($request['mobi'])) {
-        //     $student->orWhere("phone", "REGEXP", implode("|", $mobi));
-        // }
-        // if (!empty($request['vina'])) {
-        //     $student->orWhere("phone", "REGEXP", implode("|", $vina));
-        // }
-
         $phones = [
             'viettel' =>'^037|^038|^039|^036',
             'vina' => '^070|^079|^078|^077',

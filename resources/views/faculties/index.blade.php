@@ -36,9 +36,9 @@
                                                 class="fa-regular fa-eye"></i></a>
                                         <a class="btn btn-warning" href="{{ route('faculties.edit', $faculty->id) }}"><i
                                                 class="fa-regular fa-pen-to-square"></i></a>
-                                        @if (Auth::check())
+                                        @auth
                                             {!! Form::button('<i class="fa-regular fa-trash-can"></i>', ['type' => 'submit', 'class' => 'btn btn-danger']) !!}
-                                        @endif
+                                        @endauth
                                         {{-- <button type="submit" class="btn btn-danger"><i
                                                 class="fa-regular fa-trash-can"></i></button> --}}
                                         {!! Form::close() !!}
