@@ -1,6 +1,6 @@
 <header id="header" class="header fixed-top d-flex align-items-center">
     <div class="d-flex align-items-center justify-content-between">
-        <a href="{{ route('home') }}" class="logo">
+        <a href="{{ route('students.index') }}" class="logo">
             <span class="d-none d-lg-block">@lang('student manage')</span>
         </a>
         <i class="fa-solid fa-bars toggle-sidebar-btn"></i>
@@ -98,7 +98,7 @@
 <aside id="sidebar" class="sidebar">
     <ul class="sidebar-nav" id="sidebar-nav">
         <li class="nav-item">
-            <a class="nav-link " href="{{ route('home') }}">
+            <a class="nav-link " href="{{ route('students.index') }}">
                 <i class="fa-solid fa-align-justify"></i>
                 <span>@lang('dashboard')</span>
             </a>

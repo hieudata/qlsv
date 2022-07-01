@@ -46,6 +46,9 @@
                     <label class="m-1">@lang('select category'): </label>
                     {!! Form::select("category", ['1'=>'Study All', '2'=>'Not All'], null, ['placeholder' => '--Choose--', 'class'=>'m-1', 'id'=>'category']) !!}
                 </div>
+                <div class="d-flex flex-row bd-highlight m-1">
+                    <label class="m-1">Show {!! Form::select("paginate", ['1'=>'10', '2'=>'100', '3'=>'500'], null, ['class'=>'m-1']) !!} rows: </label>
+                </div>
             </div>
             <button type="submit" class="btn btn-primary m-1"><i class="fa-solid fa-filter"></i></button>
             <input type="button" class="btn btn-secondary m-1" onclick="newFunction()" value="Clear">
@@ -94,7 +97,7 @@
                         </tbody>
                     </table>
                     <div class="d-flex justify-content-center">
-                        {{-- {{ $students->links() }} --}}
+                        {{ $students->withQueryString()->links() }}
                     </div>
                 </div>
             </div>

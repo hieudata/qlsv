@@ -9,7 +9,6 @@
         <div class="card shadow m-3 p-3">
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                 <button class="btn btn-primary add-select" type="button">Add</button>
-                <button id="count" class="btn btn-primary">Count</button>
             </div>
             <h3>Student: {{ $student->name }} - ID: {{ $student->id }}</h3>
             {{-- <a class="btn btn-primary" href="{{ route('students.show', $student->id) }}"> Back</a> --}}
@@ -25,14 +24,14 @@
                         </div>
                     </div> --}}
                     <div class="addMore">
-                        <div class="row m-2">
+                        <div class="row m-2" id="add" style="display: none">
                             <div class="form-group col-4">
                                 <select name="subject_id[]" id="subject_id" class="form-select subject_id count">
                                     {{-- <option></option> --}}
                                     @foreach ($student->subjects as $subject)
                                         <option data-id="{{ $subject->pivot->point }}"
                                             value="{{ $subject->pivot->subject_id }}">
-                                            {{ $subject->name }} - {{ $subject->id }}
+                                            {{ $subject->id }} - {{ $subject->name }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -58,52 +57,39 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
-            // Nút ADD
-            $(document).on("click", ".add-select", function() {
-                let tag = $('#subject_id').html();
-                let addUpdate =
-                    `<div class="row m-2">` +
-                    `<div class="form-group col-4">` +
-                    `<select name="subject_id[]" id="subject_id" class="form-select subject_id">` + tag +
-                    `</select>` +
-                    `</div>` +
-                    `<div class="form-group col-4">` +
-                    `<input type="text" name="point[]" id="point" class="form-control point" value="">` +
-                    `</div>` +
-                    `<div class="form-group col-4">` +
-                    `<button type="button" class="btn btn-danger delete">Remove</button>` +
-                    `</div>` +
-                    `</div>`;
-                $('.addMore').append(addUpdate);
+            form = $('div#add').html();
+            $(".add-select").on("click", function() {
+                // var len = $('tbody#formadd tr').length;
+                // var subject = $('p#count-subject').html();
+                $("div#add").css('display', 'block').append("<div class='row'>"+ form +"</div>");
+            });
 
-                // disable button
-                if ($('select.count option').length == $('div.addMore').children().length) {
-                    $("button.add-select").attr("disabled", "disabled");
-                    $("main#main em").removeClass('d-none');
-                }
+            // disable button
+            if ($('select.count option').length == $('div.addMore').children().length) {
+                $("button.add-select").attr("disabled", "disabled");
+                $("main#main em").removeClass('d-none');
+            }
 
-                // select
-                $("div.addMore").each(function(index, element) {
-                    $selects = $("select#subject_id");
-                    $selects.on("change", function() {
-                        if ($selects.length <= 0) return;
-                        let selected = [];
-                        $selects.each(function(index, select) {
-                            if (select.value !== "") {
-                                selected.push(select.value);
-                            }
-                        });
-
-                        $("div.addMore").find("option").prop("disabled", false);
-                        for (let index in selected) {
-                            $("div.addMore").find('option[value="' + selected[index] +
-                                '"]:not(:selected)').prop(
-                                "disabled", true);
+            // select
+            $("div.addMore").each(function(index, element) {
+                $selects = $("select#subject_id");
+                $selects.on("change", function() {
+                    if ($selects.length <= 0) return;
+                    let selected = [];
+                    $selects.each(function(index, select) {
+                        if (select.value !== "") {
+                            selected.push(select.value);
                         }
                     });
-                    $selects.trigger("change");
-                });
 
+                    $("div.addMore").find("option").prop("disabled", false);
+                    for (let index in selected) {
+                        $("div.addMore").find('option[value="' + selected[index] +
+                            '"]:not(:selected)').prop(
+                            "disabled", true);
+                    }
+                });
+                $selects.trigger("change");
             });
 
             // Xóa remove

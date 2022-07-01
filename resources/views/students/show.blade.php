@@ -14,14 +14,16 @@
                 @yield('success')
             </div>
             <div class="d-flex flex-row bd-highlight mb-3">
-                <a class="btn btn-success m-1" href="{{ route('addSubject', $student->id) }}">{{ $student->subjects->isEmpty() ? 'Add' : 'Edit' }}
+                <a class="btn btn-success m-1"
+                    href="{{ route('addSubject', $student->id) }}">{{ $student->subjects->isEmpty() ? 'Add' : 'Edit' }}
                     subject</a>
                 <a class="btn btn-success m-1" href="{{ route('updatePoint', $student->id) }}">Update Point</a>
-              </div>
+            </div>
             <table class="table table-bordered">
                 <tr>
                     <td><strong>@lang('name'): </strong>{{ $student->name }}</td>
-                    <td><strong>Avatar: </strong><img class="rounded-circle" src="{{ asset('images/'.$student->avatar) }}" width="100px"></td>
+                    <td><strong>Avatar: </strong><img class="rounded-circle" src="{{ asset('images/' . $student->avatar) }}"
+                            width="100px"></td>
                 </tr>
                 <tr>
                     <td><strong>Phone: </strong>{{ $student->phone }}</td>
@@ -35,7 +37,8 @@
                     <td><strong>Faculty: </strong>{{ $student->faculty->name }}</td>
                     <td><strong>Registered the subject: </strong>
                         @foreach ($student->subjects as $subject)
-                            <li>{{ $subject->name }}<strong class="float-end">{{ $subject->pivot->point }} point</strong></li>
+                            <li>{{ $subject->name }}<strong class="float-end">{{ $subject->pivot->point }}
+                                    point</strong></li>
                         @endforeach
                     </td>
                 </tr>

@@ -33,7 +33,7 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
         }
 
         $phones = [
-            'viettel' =>'^037|^038|^039|^036',
+            'viettel' => '^037|^038|^039|^036',
             'vina' => '^070|^079|^078|^077',
             'mobi' => '^081|^082|^083|^084',
         ];
@@ -70,6 +70,21 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
             });
         }
 
-        return $student->paginate(10);
+        $paginate = 10;
+        if (isset($request['paginate'])) {
+            switch ($request['paginate']) {
+                case 1:
+                    $paginate = 10;
+                    break;
+                case 2:
+                    $paginate = 100;
+                    break;
+                case 3:
+                    $paginate = 500;
+                    break;
+            }
+        }
+
+        return $student->paginate($paginate);
     }
 }

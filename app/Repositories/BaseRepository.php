@@ -33,10 +33,7 @@ abstract class BaseRepository implements RepositoryInterface
     {
         return $this->model->paginate(5);
     }
-    // public function pluck()
-    // {
-    //     return $this->model->pluck('name', 'id');
-    // }
+    
     public function find($id)
     {
         return $this->model->findOrFail($id);

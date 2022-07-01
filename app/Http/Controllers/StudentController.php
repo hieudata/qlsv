@@ -11,9 +11,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Student;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use App\Mail\MyTestMail;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 
 class StudentController extends Controller
@@ -86,9 +84,10 @@ class StudentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Student $student)
+    public function show($slug)
     {
-        return view('students.show', compact('student'));
+        $student = $this->studentRepo->query()->where('slug', $slug)->first();
+        return view('students.show', ['student' => $student]);
     }
 
     /**
@@ -213,8 +212,6 @@ class StudentController extends Controller
             if ($request->password == $student->password) {
                 $request->session()->put('LoggedUser', $student->id);
                 return redirect('student/dashboard');
-                // return "Done";
-
             } else {
                 return back()->with('fail', 'Incorrect password');
             }
@@ -260,7 +257,7 @@ class StudentController extends Controller
     //Localization
     public function setLang($locale)
     {
-        App::setLocale($locale);
+        // App::setLocale($locale);
         Session::put('locale', $locale);
         return redirect()->back();
     }
@@ -286,25 +283,24 @@ class StudentController extends Controller
     // Update Point
     public function updatePoint($id)
     {
-        $student = $this->studentRepo->find($id);
+        $student = $this->studentRepo->query()->where('id', $id)->first();
         return view('student_subject.updatePoint', compact('student'));
     }
 
     public function savePoint(Request $request, $id)
     {
         $data = [];
-        foreach ($request->subject_id as $key => $value) {
-            array_push($data, [
-                'subject_id' => $request->subject_id[$key],
-                'point' => $request->point[$key],
-            ]);
-        }
-        $points = [];
-        foreach ($data as $key => $value) {
-            $points[$value['subject_id']] = ['point' => $value['point']];
-        }
-        $this->studentRepo->find($id)->subjects()->syncWithoutDetaching($points);
-
-        return redirect()->route('students.index');
+            foreach ($request->subject_id as $key => $value) {
+                array_push($data, [
+                    'subject_id' => $request->subject_id[$key],
+                    'point' => $request->point[$key],
+                ]);
+            }
+            $points = [];
+            foreach ($data as $key => $value) {
+                $points[$value['subject_id']] = ['point' => $value['point']];
+            }
+            $this->studentRepo->find($id)->subjects()->syncWithoutDetaching($points);
+        return "Success";
     }
 }
