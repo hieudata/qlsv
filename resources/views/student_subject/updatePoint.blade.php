@@ -123,19 +123,9 @@
                 }
                 changeSelect();
             });
-
-            // $('#subject_id').on('change', function() {
-            //     let tr = $(this).parent().parent();
-            //     let option = $(this).find(':selected').attr('data-id');
-            //     tr.find('#point').val(option);
-            // });
-
-            // Validate Form
+            
             $("em").hide();
             usernameError = true;
-            // $('[name="point[]"]').keyup(function() {
-            //     validateUsername();
-            // });
 
             function validateUsername() {
                 var usernameValue = $('[name="point[]"]');
