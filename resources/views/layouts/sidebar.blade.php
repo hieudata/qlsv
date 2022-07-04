@@ -43,8 +43,7 @@
             </li><!-- End Messages Nav -->
             @auth
                 <li class="nav-item dropdown pe-3">
-                    <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#"
-                        data-bs-toggle="dropdown">
+                    <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
                         <h4><i class="fa-solid fa-user-astronaut"></i></h4>
                         <span
                             class="d-none d-md-block dropdown-toggle ps-2">{{ Auth::check() ? auth()->user()->name : "Admin's name" }}</span>
@@ -91,10 +90,10 @@
                     <a href="#">Register</a>
                 </div>
             @endauth
-            <!-- End Profile Nav -->
+            
         </ul>
-    </nav><!-- End Icons Navigation -->
-</header><!-- End Header -->
+    </nav>
+</header>
 <aside id="sidebar" class="sidebar">
     <ul class="sidebar-nav" id="sidebar-nav">
         <li class="nav-item">
@@ -102,6 +101,7 @@
                 <i class="fa-solid fa-align-justify"></i>
                 <span>@lang('dashboard')</span>
             </a>
+        </li>
         <li class="nav-item">
             <a class="nav-link collapsed" href="{{ route('students.index') }}">
                 <i class="fa-solid fa-users"></i><span>@lang('student list')</span></a>
@@ -113,6 +113,6 @@
         <li class="nav-item">
             <a class="nav-link collapsed" href="{{ route('subjects.index') }}">
                 <i class="fa-solid fa-book"></i><span>@lang('subject list')</span></a>
-        </li><!-- End Tables Nav -->
+        </li>
     </ul>
 </aside>
