@@ -10,8 +10,6 @@
 @section('error')
     @if ($errors->any())
         <div class="alert alert-danger alert-dismissible fade show" role="alert"">
-            <i class="fa-solid fa-triangle-exclamation"></i>
-            <strong>Whoops!</strong> There were some problems with your input.<br><br>
             <ul>
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>

@@ -2,7 +2,6 @@
 
 namespace App\Repositories\Student;
 
-use App\Models\Subject;
 use App\Models\Student;
 use App\Repositories\BaseRepository;
 use Carbon\Carbon;
@@ -70,7 +69,7 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
             });
         }
 
-        $paginate = 10;
+        $paginate = 5;
         if (isset($request['paginate'])) {
             switch ($request['paginate']) {
                 case 1:

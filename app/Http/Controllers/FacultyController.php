@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreFacultyRequest;
-use App\Models\Faculty;
 use App\Repositories\Faculty\FacultyRepositoryInterface;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
 class FacultyController extends Controller

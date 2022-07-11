@@ -3,13 +3,21 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use App\Repositories\User\UserRepository;
 
 class AdminController extends Controller
 {
+
+    protected $userRepo;
+
+    public function __construct(UserRepository $userRepo)
+    {
+        $this->userRepo = $userRepo;
+    }
+
     public function index()
     {
         return view('admin.login');
@@ -52,7 +60,7 @@ class AdminController extends Controller
 
     public function create(array $data)
     {
-        return User::create([
+        return $this->userRepo->create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password'])

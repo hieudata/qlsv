@@ -8,7 +8,7 @@
                 <h3 class="m-1 font-weight-bold text-primary">Register the subject</h3>
                 <h4 class="m-1 text-dark">Student: {{ $student->name }}</h4>
                 <div class="float-right m-1">
-                    <a class="btn btn-primary" href="{{ route('students.show', $student->id) }}"> Back</a>
+                    <a class="btn btn-primary" href="{{ route('student.slug', $student->slug) }}">Back</a>
                 </div>
             </div>
             <div class="card-body">

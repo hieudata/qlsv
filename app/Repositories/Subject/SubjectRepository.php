@@ -8,10 +8,10 @@ class SubjectRepository extends BaseRepository implements SubjectRepositoryInter
 {
     public function getModel()
     {
-        return \App\Models\Subject::class;
+        return Subject::class;
     }
     public function newSubject()
     {
-        return new Subject();
+        return new $this->model;
     }
 }

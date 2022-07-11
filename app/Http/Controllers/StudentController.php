@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PointRequest;
 use App\Http\Requests\StudentRequest;
 use App\Repositories\Student\StudentRepositoryInterface;
 use App\Repositories\Faculty\FacultyRepositoryInterface;
 use App\Repositories\Subject\SubjectRepositoryInterface;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use App\Models\Student;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use App\Mail\MyTestMail;
 use Illuminate\Support\Facades\Mail;
@@ -37,9 +36,8 @@ class StudentController extends Controller
         // if (!empty($request['category'])) {
         //     $subjectTotal = Subject::count('id');
         // }
-
         $students = $this->studentRepo->search($request->all());
-        $faculties = $this->facultyRepo->pluck();
+        $faculties = $this->facultyRepo->getAll()->pluck('name', 'id');
 
         return view('students.index', compact('students', 'faculties'));
     }
@@ -52,7 +50,7 @@ class StudentController extends Controller
     public function create()
     {
         $student = $this->studentRepo->newStudent();
-        $faculties = $this->facultyRepo->pluck();
+        $faculties = $this->facultyRepo->getAll()->pluck('name', 'id');
         return view('students.form', compact('faculties', 'student'));
     }
 
@@ -64,7 +62,6 @@ class StudentController extends Controller
      */
     public function store(StudentRequest $request)
     {
-        // $request->validate(['avatar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048']);
         $input = $request->all();
         if ($avatar = $request->file('avatar')) {
             $profileImage = rand(1111, 9999) . "." . $avatar->getClientOriginalExtension();
@@ -100,7 +97,7 @@ class StudentController extends Controller
     {
         return view('students.form', [
             'student' => $this->studentRepo->find($id),
-            'faculties' => $this->facultyRepo->pluck('name', 'id')
+            'faculties' => $this->facultyRepo->getAll()->pluck('name', 'id')
         ]);
     }
 
@@ -163,8 +160,6 @@ class StudentController extends Controller
             if ($request->password == $student->password) {
                 $request->session()->put('LoggedUser', $student->id);
                 return redirect('student/dashboard');
-                // return "Done";
-
             } else {
                 return back()->with('fail', 'Incorrect password');
             }
@@ -173,7 +168,6 @@ class StudentController extends Controller
 
     public function dashboard()
     {
-        // $data = ['LoggedUserInfo'=>$this->studentRepo->query()->where('id','=', session('LoggedUser'))->first()];
         $student = $this->studentRepo->query()->where('id', '=', session('LoggedUser'))->first();
         if ($student) {
             return view('students.dashboard', compact('student'));
@@ -241,7 +235,7 @@ class StudentController extends Controller
     {
         $student = $this->studentRepo->find($request->id);
         $input = $request->all();
-        $input['slug'] = SlugService::createSlug(Student::class, 'slug', $request->name);
+        $input['slug'] = SlugService::createSlug($student, 'slug', $request->name);
         if ($avatar = $request->file('avatar')) {
             $profileImage = rand(1111, 9999) . "." . $avatar->getClientOriginalExtension();
             $avatar->move('images/', $profileImage);
@@ -257,7 +251,6 @@ class StudentController extends Controller
     //Localization
     public function setLang($locale)
     {
-        // App::setLocale($locale);
         Session::put('locale', $locale);
         return redirect()->back();
     }
@@ -277,7 +270,7 @@ class StudentController extends Controller
             'subjects' => 'required',
         ]);
         $student->subjects()->sync($request->subjects);
-        return redirect()->route('students.show', ['student' => $student->id])->with('success', 'Succesful');
+        return redirect()->route('students.index', ['student' => $student->id])->with('success', 'Succesful');
     }
 
     // Update Point
@@ -287,9 +280,18 @@ class StudentController extends Controller
         return view('student_subject.updatePoint', compact('student'));
     }
 
-    public function savePoint(Request $request, $id)
+    public function updatePoint2($id)
     {
-        $data = [];
+        $student = $this->studentRepo->query()->where('id', $id)->first();
+        $subjects = $this->subjectRepo->getAll();
+        $subjectsdone = $this->studentRepo->find($id)->subjects()->get();
+        return view('student_subject.updatePoint', compact('student', 'subjects', 'subjectsdone'));
+    }
+
+    public function savePoint(PointRequest $request, $id)
+    {
+        if (isset($request->subject_id)) {
+            $data = [];
             foreach ($request->subject_id as $key => $value) {
                 array_push($data, [
                     'subject_id' => $request->subject_id[$key],
@@ -300,7 +302,20 @@ class StudentController extends Controller
             foreach ($data as $key => $value) {
                 $points[$value['subject_id']] = ['point' => $value['point']];
             }
-            $this->studentRepo->find($id)->subjects()->syncWithoutDetaching($points);
-        return "Success";
+            $this->studentRepo->find($id)->subjects()->sync($points);
+            dd("Success");
+        } else {
+            $this->studentRepo->find($id)->subjects()->detach();
+        }
+    }
+
+    public function removeSubject($id)
+    {
+
+        // User::find($id)->delete($id);
+
+        return response()->json([
+            'success' => 'Record deleted successfully!'
+        ]);
     }
 }

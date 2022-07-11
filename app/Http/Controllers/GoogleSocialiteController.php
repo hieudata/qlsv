@@ -2,16 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Student;
-use App\Models\User;
+use App\Repositories\User\UserRepository;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Auth;
 use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
 class GoogleSocialiteController extends Controller
 {
+
+    protected $userRepo;
+
+    public function __construct(UserRepository $userRepo)
+    {
+        $this->userRepo = $userRepo;
+    }
+
     public function redirectToGoogle()
     {
         return Socialite::driver('google')->redirect();
@@ -28,7 +34,7 @@ class GoogleSocialiteController extends Controller
 
             $user = Socialite::driver('google')->user();
 
-            $user = User::where('social_id', $user->id)->first();
+            $user = $this->userRepo->query()->where('social_id', $user->id)->first();
 
             if ($user) {
 
@@ -36,7 +42,7 @@ class GoogleSocialiteController extends Controller
 
                 return redirect()->to('students');
             } else {
-                $newUser = User::create([
+                $newUser = $this->userRepo->create([
                     'name' => $user->name,
                     'email' => $user->email,
                     'social_id' => $user->id,

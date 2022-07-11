@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreFacultyRequest extends FormRequest
+class PointRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,21 +23,17 @@ class StoreFacultyRequest extends FormRequest
      */
     public function rules()
     {
-        $data = [
-            'name' => 'required|unique:faculties|max:55',
+        return [
+            "point.*" => "required|numeric|min:0|max:10",
+            "subject_id.*" => "required"
         ];
-
-        if (!empty(request()->route('faculty'))){
-            $data['name'] = 'required|unique:faculties|max:55';
-        }
-
-        return $data;
     }
+
     public function messages()
     {
         return [
-            'name.required' => 'Enter faculty name is required',
-            'name.unique' => 'This faculty was in existence. ',
+            // 'point.*.required' => 'Enter point required',
+            // 'point.*.max' => "Point nho hon 10"
         ];
     }
 }

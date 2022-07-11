@@ -9,15 +9,11 @@ class FacultyRepository extends BaseRepository implements FacultyRepositoryInter
 {
     public function getModel()
     {
-        return \App\Models\Faculty::class;
+        return Faculty::class;
     }
 
     public function newFaculty()
     {
-        return new Faculty();
-    }
-    public function pluck()
-    {
-        return Faculty::pluck('name', 'id');
+        return new $this->model;
     }
 }

@@ -26,11 +26,11 @@ class StudentRequest extends FormRequest
     public function rules()
     {
         $data = [
-            'name' => 'required|max:50',
-            'phone' => 'required|unique:students,phone',
+            'name' => 'required|max:55',
+            'phone' => 'required|unique:students,phone|max:15',
             'gender' => 'required',
             'email' => 'required|email|unique:students,email',
-            'birthday' => 'required|date|date_format:Y-m-d',
+            'birthday' => 'required|date|before:01/01/2100|after:01/01/1900',
             'faculty_id' => 'required',
         ];
 

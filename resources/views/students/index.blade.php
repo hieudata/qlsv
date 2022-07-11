@@ -19,26 +19,26 @@
             <div class="row">
                 <div class="d-flex flex-row bd-highlight m-1">
                     <label class="m-1">@lang('range age'):</label>
-                    {!! Form::number("age_from", null, ['class'=>'m-1', 'placeholder' => "Age From"]) !!}
-                    {!! Form::number("age_to", null, ['class'=>'m-1', 'placeholder' => "Age To"]) !!}
+                    {!! Form::number("age_from", request('age_from'), ['class'=>'m-1', 'placeholder' => "Age From"]) !!}
+                    {!! Form::number("age_to", request('age_to'), ['class'=>'m-1', 'placeholder' => "Age To"]) !!}
                 </div>
                 <div class="d-flex flex-row bd-highlight m-1">
                     <label class="m-1">@lang('range point'):</label>
-                    {!! Form::number("point_from", null, ['class'=>'m-1', 'placeholder' => "Point From"]) !!}
-                    {!! Form::number("point_to", null, ['class'=>'m-1', 'placeholder' => "Point To"]) !!}
+                    {!! Form::number("point_from", request('point_from'), ['class'=>'m-1', 'placeholder' => "Point From"]) !!}
+                    {!! Form::number("point_to", request('point_to'), ['class'=>'m-1', 'placeholder' => "Point To"]) !!}
                 </div>
                 <div class="d-flex flex-row bd-highlight m-1">
                     <label class="mx-1">@lang('select brand'): </label>
                     <div class="form-check form-check-inline">
-                        {!! Form::checkbox("viettel", null, request()->viettel == "on"?"checked":"", ['class'=>'form-check-input']) !!}
+                        {!! Form::checkbox("viettel", null, request('viettel') == "on"?"checked":"", ['class'=>'form-check-input']) !!}
                         <label class="form-check-label">Viettel</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        {!! Form::checkbox("mobi", null, request()->mobi == "on"?"checked":"", ['class'=>'form-check-input']) !!}
+                        {!! Form::checkbox("mobi", null, request('mobi') == "on"?"checked":"", ['class'=>'form-check-input']) !!}
                         <label class="form-check-label">Mobi</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        {!! Form::checkbox("vina", null, request()->vina == "on"?"checked":"", ['class'=>'form-check-input']) !!}
+                        {!! Form::checkbox("vina", null, request('vina') == "on"?"checked":"", ['class'=>'form-check-input']) !!}
                         <label class="form-check-label">Vina</label>
                     </div>
                 </div>
@@ -57,7 +57,7 @@
             {!! Form::close() !!}
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-sm table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+                    <table class="table table-sm table-bordered table-striped" width="100%" cellspacing="0">
                         <thead class="table-primary">
                             <tr>
                                 <th>#</th>
@@ -89,7 +89,6 @@
                                                 class="fa-regular fa-pen-to-square"></i></a>
                                         <a class="btn btn-success" href="javascript:void(0)"
                                             onclick="editProduct({{ $student->id }})">Ajax</a>
-                                        {{-- {!! Form::button('<i class="fa-regular fa-pen-to-square"></i>', ['class' => 'btn btn-success edit-btn', 'data-bs-toggle' => 'modal', 'data-bs-target' => '#exampleModal-' . $student->id]) !!} --}}
                                         {!! Form::button('<i class="fa-regular fa-trash-can"></i>', ['type' => 'submit', 'class' => 'btn btn-danger']) !!}
                                         {!! Form::close() !!}
                                 </tr>
@@ -108,9 +107,10 @@
                 <div class="modal-content">
                     <div class="modal-header bg-primary">
                         <h5 class="modal-title text-white">Edit Student</h5>
-                        <button type="button" class="text-white btn-close h3" data-bs-dismiss="modal"
+                        <button type="button" class="btn-close h3" data-bs-dismiss="modal"
                             aria-label="Close"></button>
                     </div>
+                    @yield('success')
                     <div class="modal-body">
                         <form id="studentEditForm">
                             @csrf
@@ -165,6 +165,7 @@
                 $("#id").val(student.id);
                 $("#name").val(student.name);
                 $("#phone").val(student.phone);
+                $("#email").val(student.email);
                 $("input[type=radio][name='gender'][value=" + student.gender + "]").prop('checked', true);
                 $("#birthday").val(student.birthday);
                 $("#avatar").val();
@@ -180,6 +181,7 @@
             let name = $("#name").val();
             let slug = $("#slug").val();
             let phone = $("#phone").val();
+            let email = $("#email").val();
             let gender = $("input[name='gender']:checked").val();
             let birthday = $("#birthday").val();
             let faculty_id = $('select[name="faculty_id"]').val();
@@ -192,6 +194,7 @@
             formData.append('name', name);
             formData.append('slug', slug);
             formData.append('phone', phone);
+            formData.append('email', email);
             formData.append('gender', gender);
             formData.append('birthday', birthday);
             formData.append('faculty_id', faculty_id);
