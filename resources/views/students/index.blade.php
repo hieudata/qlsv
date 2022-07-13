@@ -15,39 +15,41 @@
                 </div>
             </div>
             @yield('success')
-            {!! Form::open(['route' => 'students.index', 'method' => 'GET', 'enctype' => 'multipart/form-data', 'class' => 'm-3', 'id' => 'newForm']) !!}    
+            {!! Form::open(['route' => 'students.index', 'method' => 'GET', 'enctype' => 'multipart/form-data', 'class' => 'm-3', 'id' => 'newForm',]) !!}
             <div class="row">
                 <div class="d-flex flex-row bd-highlight m-1">
                     <label class="m-1">@lang('range age'):</label>
-                    {!! Form::number("age_from", request('age_from'), ['class'=>'m-1', 'placeholder' => "Age From"]) !!}
-                    {!! Form::number("age_to", request('age_to'), ['class'=>'m-1', 'placeholder' => "Age To"]) !!}
+                    {!! Form::number('age_from', request('age_from'), ['class' => 'm-1', 'placeholder' => 'Age From']) !!}
+                    {!! Form::number('age_to', request('age_to'), ['class' => 'm-1', 'placeholder' => 'Age To']) !!}
                 </div>
                 <div class="d-flex flex-row bd-highlight m-1">
                     <label class="m-1">@lang('range point'):</label>
-                    {!! Form::number("point_from", request('point_from'), ['class'=>'m-1', 'placeholder' => "Point From"]) !!}
-                    {!! Form::number("point_to", request('point_to'), ['class'=>'m-1', 'placeholder' => "Point To"]) !!}
+                    {!! Form::number('point_from', request('point_from'), ['class' => 'm-1', 'placeholder' => 'Point From']) !!}
+                    {!! Form::number('point_to', request('point_to'), ['class' => 'm-1', 'placeholder' => 'Point To']) !!}
                 </div>
                 <div class="d-flex flex-row bd-highlight m-1">
                     <label class="mx-1">@lang('select brand'): </label>
                     <div class="form-check form-check-inline">
-                        {!! Form::checkbox("viettel", null, request('viettel') == "on"?"checked":"", ['class'=>'form-check-input']) !!}
+                        {!! Form::checkbox('viettel', null, request('viettel') == 'on' ? 'checked' : '', [
+                            'class' => 'form-check-input',
+                        ]) !!}
                         <label class="form-check-label">Viettel</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        {!! Form::checkbox("mobi", null, request('mobi') == "on"?"checked":"", ['class'=>'form-check-input']) !!}
+                        {!! Form::checkbox('mobi', null, request('mobi') == 'on' ? 'checked' : '', ['class' => 'form-check-input']) !!}
                         <label class="form-check-label">Mobi</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        {!! Form::checkbox("vina", null, request('vina') == "on"?"checked":"", ['class'=>'form-check-input']) !!}
+                        {!! Form::checkbox('vina', null, request('vina') == 'on' ? 'checked' : '', ['class' => 'form-check-input']) !!}
                         <label class="form-check-label">Vina</label>
                     </div>
                 </div>
                 <div class="d-flex flex-row bd-highlight m-1">
                     <label class="m-1">@lang('select category'): </label>
-                    {!! Form::select("category", ['1'=>'Study All', '2'=>'Not All'], null, ['placeholder' => '--Choose--', 'class'=>'m-1', 'id'=>'category']) !!}
+                    {!! Form::select('category', ['1' => 'Study All', '2' => 'Not All'], null, ['placeholder' => '--Choose--', 'class' => 'm-1', 'id' => 'category', ]) !!}
                 </div>
                 <div class="d-flex flex-row bd-highlight m-1">
-                    <label class="m-1">Show {!! Form::select("paginate", ['1'=>'10', '2'=>'100', '3'=>'500'], null, ['class'=>'m-1']) !!} rows: </label>
+                    <label class="m-1">Show {!! Form::select('paginate', ['1' => '10', '2' => '100', '3' => '500'], null, ['class' => 'm-1']) !!} rows: </label>
                 </div>
             </div>
             <button type="submit" class="btn btn-primary m-1"><i class="fa-solid fa-filter"></i></button>
@@ -83,13 +85,13 @@
                                     <td>{{ $student->faculty->name }}</td>
                                     <td>
                                         {!! Form::model($student, ['route' => ['students.destroy', $student->id], 'method' => 'DELETE']) !!}
-                                        <a class="btn btn-info" href="{{ route('student.slug', $student->slug) }}" id="ajax"><i
-                                                class="fa-regular fa-eye"></i></a>
+                                        <a class="btn btn-info" href="{{ route('student.slug', $student->slug) }}"
+                                            id="ajax"><i class="fa-regular fa-eye"></i></a>
                                         <a class="btn btn-warning" href="{{ route('students.edit', $student->id) }}"><i
                                                 class="fa-regular fa-pen-to-square"></i></a>
                                         <a class="btn btn-success" href="javascript:void(0)"
                                             onclick="editProduct({{ $student->id }})">Ajax</a>
-                                        {!! Form::button('<i class="fa-regular fa-trash-can"></i>', ['type' => 'submit', 'class' => 'btn btn-danger']) !!}
+                                        {!! Form::button('<i class="fa-regular fa-trash-can"></i>', ['type' => 'submit', 'class' => "btn btn-danger"]) !!}
                                         {!! Form::close() !!}
                                 </tr>
                             @endforeach
@@ -107,8 +109,7 @@
                 <div class="modal-content">
                     <div class="modal-header bg-primary">
                         <h5 class="modal-title text-white">Edit Student</h5>
-                        <button type="button" class="btn-close h3" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
+                        <button type="button" class="btn-close h3" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     @yield('success')
                     <div class="modal-body">

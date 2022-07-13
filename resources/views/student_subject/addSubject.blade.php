@@ -29,7 +29,7 @@
                                         <tr>
                                             <td>{{ ++$key }}</td>
                                             <td>{{ $subject->name }}</td>
-                                            <td><input type="checkbox" name="subjects[]" value="{{ $subject->id }}"
+                                            <td><input class="form-check-input" type="checkbox" name="subjects[]" value="{{ $subject->id }}"
                                                     {{ $student->subjects->contains($subject->id) ? 'checked' : '' }}>
                                             </td>
                                         </tr>

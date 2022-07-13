@@ -19,7 +19,7 @@
                 @csrf
                 <div class="table table-sm">
                     <div class="thead">
-                        <div class="row m-2">
+                        <div class="row ms-2">
                             <div class="form-group col-4">Subject</div>
                             <div class="form-group col-4">Point</div>
                             <div class="form-group col-4">Delete</div>
@@ -27,27 +27,22 @@
                     </div>
                     <div class="addMore">
                         <div class="m-2">
-                            @foreach ($subjectsdone as $key => $subjectdone)
+                            @foreach ($donesubjects as $key => $donesubject)
                                 <div class="row">
-                                    <div class="form-group col-4">
+                                    <div class="form-group col-4 mb-2">
                                         <select name="subject_id[]" id="subject_id" class="form-select subject_id">
                                             <option>Select Subject</option>
-                                            <option value="{{ $subjectdone->id }}"
-                                                {{ $subjectdone->id ? 'selected' : '' }}>
-                                                {{ $subjectdone->name }}</option>
+                                            <option value="{{ $donesubject->id }}" {{ $donesubject->id ? 'selected' : '' }}>{{ $donesubject->name }}</option>
                                             @foreach ($subjects as $subject)
-                                                <option value="{{ $subject->id }}">
-                                                    {{ $subject->name }}
-                                                </option>
+                                                <option value="{{ $subject->id }}" >{{ $subject->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="form-group col-4">
-                                        <input type="text" name="point[]" id="point" class="form-control point"
-                                            value="{{ old('point.' . $key) }}">
+                                    <div class="form-group col-4 mb-2">
+                                        <input type="text" name="point[]" id="point" class="form-control point" value="{{ old('point.' . $key) }}" autofocus>
                                     </div>
-                                    <div class="form-group col-4">
-                                        <button type="button" class="btn btn-danger delete">Remove</button>
+                                    <div class="form-group col-2 mb-2">
+                                        <button type="button" class="btn btn-danger delete"><i class="fa-regular fa-trash-can"></i></button>
                                     </div>
                                 </div>
                             @endforeach
@@ -57,22 +52,18 @@
                 <div class="col-md-12 text-center">
                     <button type="submit" class="btn btn-primary" id="submitbtn">Save</button>
                 </div>
-                <p class="text-danger d-none m-2 fst-italic"><i class="fa-solid fa-circle-xmark text-danger m-1"></i>Bạn đã
-                    add hết môn rồi!</p>
+                <p class="text-danger d-none m-2 fst-italic"><i class="fa-solid fa-circle-xmark text-danger m-1"></i>Bạn đã add hết môn rồi!</p>
             </form>
         </div>
     </main>
     <select name="subject_id[]" id="clone" class="form-select subject_id d-none">
-        @foreach ($subjects as $subject)
+        @foreach ($subjects as $key => $subject)
             <option value="{{ $subject->id }}">
                 {{ $subject->name }}
             </option>
         @endforeach
     </select>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(document).ready(function() {
             updateSelects()
@@ -98,16 +89,16 @@
                 let tag = $('#clone').html();
                 let addUpdate =
                     `<div class="row">` +
-                    `<div class="form-group col-4">` +
+                    `<div class="form-group col-4 mb-2">` +
                     `<select name="subject_id[]" id="subject_id" class="form-select subject_id count"><option>Select Subject</option>` +
                     tag +
                     `</select>` +
                     `</div>` +
-                    `<div class="form-group col-4">` +
+                    `<div class="form-group col-4 mb-2">` +
                     `<input type="text" name="point[]" id="point" class="form-control point">` +
                     `</div>` +
-                    `<div class="form-group col-4">` +
-                    `<button type="button" class="btn btn-danger delete">Remove</button>` +
+                    `<div class="form-group col-2 mb-2">` +
+                    `<button type="button" class="btn btn-danger delete"><i class="fa-regular fa-trash-can"></i></button>` +
                     `</div>` +
                     `</div>`;
                 $('.addMore > div').append(addUpdate);
@@ -116,7 +107,6 @@
                     $("button.add-select").addClass('d-none');
                     $("main#main p").removeClass('d-none').addClass('d-inline');
                 }
-                updateSelects()
             });
 
             $('.addMore').delegate('.delete', 'click', function() {

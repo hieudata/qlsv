@@ -31,12 +31,7 @@ class StudentController extends Controller
      */
     public function index(Request $request)
     {
-        // $subjectTotal = 0;
-
-        // if (!empty($request['category'])) {
-        //     $subjectTotal = Subject::count('id');
-        // }
-        $students = $this->studentRepo->search($request->all());
+        $students = $this->studentRepo->search($request->all(), $this->subjectRepo->getAll()->count());
         $faculties = $this->facultyRepo->getAll()->pluck('name', 'id');
 
         return view('students.index', compact('students', 'faculties'));
@@ -284,8 +279,8 @@ class StudentController extends Controller
     {
         $student = $this->studentRepo->query()->where('id', $id)->first();
         $subjects = $this->subjectRepo->getAll();
-        $subjectsdone = $this->studentRepo->find($id)->subjects()->get();
-        return view('student_subject.updatePoint', compact('student', 'subjects', 'subjectsdone'));
+        $donesubjects = $this->studentRepo->find($id)->subjects()->get();
+        return view('student_subject.updatePoint', compact('student', 'subjects', 'donesubjects'));
     }
 
     public function savePoint(PointRequest $request, $id)
@@ -307,15 +302,5 @@ class StudentController extends Controller
         } else {
             $this->studentRepo->find($id)->subjects()->detach();
         }
-    }
-
-    public function removeSubject($id)
-    {
-
-        // User::find($id)->delete($id);
-
-        return response()->json([
-            'success' => 'Record deleted successfully!'
-        ]);
     }
 }

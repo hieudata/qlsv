@@ -13,7 +13,6 @@
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <title>Document</title>
 </head>
-
 <body>
     <main>
         <div class="container">
@@ -41,14 +40,12 @@
                                             <div class="input-group has-validation">
                                                 <input type="text" placeholder="Email" id="email" class="form-control"
                                         name="email" required autofocus>
-                                                <div class="invalid-feedback">Please enter your email.</div>
                                             </div>
                                         </div>
                                         <div class="col-12">
                                             <label for="yourPassword" class="form-label">Password</label>
                                             <input type="password" placeholder="Password" id="password" class="form-control"
                                         name="password" required>
-                                            <div class="invalid-feedback">Please enter your password!</div>
                                         </div>
                                         <div class="col-12">
                                             <div class="form-check">
@@ -75,5 +72,4 @@
         </div>
     </main>
 </body>
-
 </html>

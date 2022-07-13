@@ -18,7 +18,7 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
         return new $this->model;
     }
 
-    public function search($request)
+    public function search($request, $subjectTotal)
     {
         $student = $this->model->with('subjects', 'faculty');
 
@@ -48,7 +48,6 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
         }
 
         if (!empty($request['category'])) {
-
             $operator = '>=';
 
             if ($request['category'] == "2") {
@@ -57,7 +56,7 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
 
             $student->whereHas('subjects', function ($q) {
                 $q->where('point', '>', 0);
-            }, $operator);
+            }, $operator, $subjectTotal);
         }
 
         if (!empty($request['point_from']) && !empty($request['point_to'])) {

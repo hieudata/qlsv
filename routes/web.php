@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ApiController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FacultyController;
 use App\Http\Controllers\GoogleSocialiteController;
@@ -13,6 +14,7 @@ Route::resources([
     'students' => StudentController::class,
     'subjects' => SubjectController::class,
     'users' => UserController::class,
+    'subjects-api' => ApiController::class
 ]);
 
 // Auth::routes();

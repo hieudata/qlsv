@@ -25,15 +25,14 @@ class PointRequest extends FormRequest
     {
         return [
             "point.*" => "required|numeric|min:0|max:10",
-            "subject_id.*" => "required"
+            "subject_id.*" => "required|numeric"
         ];
     }
 
     public function messages()
     {
         return [
-            // 'point.*.required' => 'Enter point required',
-            // 'point.*.max' => "Point nho hon 10"
+            'subject_id.*.numeric' => 'Select option wrong',
         ];
     }
 }
