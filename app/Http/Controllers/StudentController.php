@@ -12,6 +12,8 @@ use Cviebrock\EloquentSluggable\Services\SlugService;
 use App\Mail\MyTestMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class StudentController extends Controller
 {
@@ -239,8 +241,14 @@ class StudentController extends Controller
         } else {
             unset($input['avatar']);
         }
+        $data = [];
         $student->update($input);
-        return response()->json($student);
+        $data = [
+            'data' => $student,
+            'message' => "Update success"
+        ];
+        
+        return response()->json($data);
     }
 
     //Localization
@@ -248,6 +256,16 @@ class StudentController extends Controller
     {
         Session::put('locale', $locale);
         return redirect()->back();
+    }
+
+    public function getLanguage()
+    {
+        $en = DB::table('languages')->pluck('english', '_key');
+        $vi = DB::table('languages')->pluck('vietnamese', '_key');
+        $jsonEN = json_encode($en, JSON_UNESCAPED_UNICODE);
+        $jsonVi = json_encode($vi, JSON_UNESCAPED_UNICODE);
+        file_put_contents(base_path('resources/lang/en.json'), stripslashes($jsonEN));
+        file_put_contents(base_path('resources/lang/vi.json'), stripslashes($jsonVi));
     }
 
     // Add&Edit Subject

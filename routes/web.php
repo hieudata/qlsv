@@ -1,20 +1,19 @@
 <?php
 
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\ApiController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FacultyController;
 use App\Http\Controllers\GoogleSocialiteController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\GithubSocialiteController;
 
 Route::resources([
     'faculties' => FacultyController::class,
     'students' => StudentController::class,
     'subjects' => SubjectController::class,
     'users' => UserController::class,
-    'subjects-api' => ApiController::class
 ]);
 
 // Auth::routes();
@@ -30,7 +29,7 @@ Route::controller(StudentController::class)->group(function () {
     Route::get('student/logout', 'logout')->name('student.logout');
     Route::get('send-mail', 'sendmail')->name('sendmail');
     Route::get('students/ajax/{id}', 'getStudent');
-    Route::post('students/ajax', 'updateStudent')->name('student.update');
+    Route::post('update/ajax', 'updateStudent')->name('student.update');
     Route::get('students/{student:slug}', 'show')->name('student.slug');
     Route::get('language/{locale}', 'setLang')->name('locale');
 });
@@ -47,5 +46,8 @@ Route::controller(AdminController::class)->group(function () {
 Route::controller(GoogleSocialiteController::class)->group(function () {
     Route::get('auth/google',  'redirectToGoogle');
     Route::get('callback/google',  'handleCallback');
-    Route::get('home',  'signOut')->name('singOut');
+    Route::get('home', 'signOut')->name('singOut');
 });
+
+Route::get('auth/github', [GithubSocialiteController::class, 'gitRedirect']);
+Route::get('auth/github/callback', [GithubSocialiteController::class, 'gitCallback']);

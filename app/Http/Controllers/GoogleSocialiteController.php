@@ -42,7 +42,7 @@ class GoogleSocialiteController extends Controller
 
                 return redirect()->to('students');
             } else {
-                $newUser = $this->userRepo->create([
+                $newUser = $this->userRepo->query()->create([
                     'name' => $user->name,
                     'email' => $user->email,
                     'social_id' => $user->id,

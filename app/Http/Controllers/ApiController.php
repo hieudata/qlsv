@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Subject;
 use Illuminate\Http\Request;
 use App\Repositories\Subject\SubjectRepositoryInterface;
 
@@ -41,7 +42,7 @@ class ApiController extends Controller
      */
     public function store(Request $request)
     {
-        return $this->subjectRepo->create($request->all());
+        return Subject::create($request->all());
     }
 
     /**

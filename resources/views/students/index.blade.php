@@ -15,7 +15,13 @@
                 </div>
             </div>
             @yield('success')
-            {!! Form::open(['route' => 'students.index', 'method' => 'GET', 'enctype' => 'multipart/form-data', 'class' => 'm-3', 'id' => 'newForm',]) !!}
+            {!! Form::open([
+                'route' => 'students.index',
+                'method' => 'GET',
+                'enctype' => 'multipart/form-data',
+                'class' => 'm-3',
+                'id' => 'newForm',
+            ]) !!}
             <div class="row">
                 <div class="d-flex flex-row bd-highlight m-1">
                     <label class="m-1">@lang('range age'):</label>
@@ -46,7 +52,11 @@
                 </div>
                 <div class="d-flex flex-row bd-highlight m-1">
                     <label class="m-1">@lang('select category'): </label>
-                    {!! Form::select('category', ['1' => 'Study All', '2' => 'Not All'], null, ['placeholder' => '--Choose--', 'class' => 'm-1', 'id' => 'category', ]) !!}
+                    {!! Form::select('category', ['1' => 'Study All', '2' => 'Not All'], null, [
+                        'placeholder' => '--Choose--',
+                        'class' => 'm-1',
+                        'id' => 'category',
+                    ]) !!}
                 </div>
                 <div class="d-flex flex-row bd-highlight m-1">
                     <label class="m-1">Show {!! Form::select('paginate', ['1' => '10', '2' => '100', '3' => '500'], null, ['class' => 'm-1']) !!} rows: </label>
@@ -90,8 +100,8 @@
                                         <a class="btn btn-warning" href="{{ route('students.edit', $student->id) }}"><i
                                                 class="fa-regular fa-pen-to-square"></i></a>
                                         <a class="btn btn-success" href="javascript:void(0)"
-                                            onclick="editProduct({{ $student->id }})">Ajax</a>
-                                        {!! Form::button('<i class="fa-regular fa-trash-can"></i>', ['type' => 'submit', 'class' => "btn btn-danger"]) !!}
+                                            onclick="editStudent({{ $student->id }})"><i class="fa-solid fa-pen"></i></a>
+                                        {!! Form::button('<i class="fa-regular fa-trash-can"></i>', ['type' => 'submit', 'class' => 'btn btn-danger']) !!}
                                         {!! Form::close() !!}
                                 </tr>
                             @endforeach
@@ -112,40 +122,40 @@
                         <button type="button" class="btn-close h3" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     @yield('success')
+                    <div class="alert alert-danger" style="display:none"></div>
                     <div class="modal-body">
                         <form id="studentEditForm">
                             @csrf
                             <div class="row">
                                 <input type="hidden" id="id" name="id">
-                                <input type="hidden" id="slug" name="slug">
                                 <div class="col-md-6 p-3">
-                                    <label for="">Student Name</label>
-                                    <input type="text" class="form-control" id="name">
+                                    {!! Form::label('name', 'Student Name') !!}
+                                    {!! Form::text('name', null, ['class' => 'form-control', 'placeholder' => 'Full Name']) !!}
                                 </div>
                                 <div class="col-md-6 p-3">
                                     {!! Form::label('avatar', 'Avatar') !!}
                                     <img id="imgPreview" width="100px" class="rounded-circle">
-                                    {!! Form::file('avatar', ['id' => 'avatar']) !!}
+                                    {!! Form::file('avatar') !!}
                                 </div>
                                 <div class="col-md-6 p-3">
-                                    <label for="">Phone Number</label>
-                                    <input type="text" class="form-control" id="phone">
+                                    {!! Form::label('phone', 'Phone Number') !!}
+                                    {!! Form::text('phone', null, ['class' => 'form-control', 'placeholder' => 'Number']) !!}
                                 </div>
                                 <div class="col-md-6 p-3">
-                                    <label class="d-block mb-2">Gender</label>
-                                    <input type=radio name="gender" value="1" id="gender">Male
-                                    <input type=radio name="gender" value="0" id="gender">Female
+                                    {!! Form::label('gender', 'Gender', ['class' => 'd-block mb-2']) !!}
+                                    {!! Form::radio('gender', 1) !!} Male
+                                    {!! Form::radio('gender', 0, true, ['class' => 'ms-3']) !!} Female
                                 </div>
                                 <div class="col-md-6 p-3">
-                                    <label for="">Email</label>
-                                    <input type="text" class="form-control" id="email">
+                                    {!! Form::label('email', 'Email') !!}
+                                    <input type="text" class="form-control" id="email" name="email">
                                 </div>
                                 <div class="col-md-6 p-3">
-                                    <label for="">Birthday</label>
-                                    <input type="date" class="form-control" id="birthday">
+                                    {!! Form::label('birhday', 'Birthday') !!}
+                                    {!! Form::date('birthday', $student->birthday, ['class' => 'form-control']) !!}
                                 </div>
                                 <div class="col-md-6 p-3">
-                                    {!! Form::label('faculty', 'Faculty', []) !!}
+                                    {!! Form::label('faculty_id', 'Faculty') !!}
                                     {!! Form::select('faculty_id', $faculties, null, ['class' => 'form-control', 'id' => 'faculty_id']) !!}
                                 </div>
                                 <div class="col-md-6 p-3 mt-2">
@@ -161,46 +171,27 @@
         </div>
     </main>
     <script>
-        function editProduct(id) {
+        function editStudent(id) {
             $.get('students/ajax/' + id, function(student) {
-                $("#id").val(student.id);
-                $("#name").val(student.name);
-                $("#phone").val(student.phone);
-                $("#email").val(student.email);
+                $.each(student, function(key, value) {
+                    if (key !== "avatar") {
+                        $("#" + key).val(value);
+                    }
+                });
+
                 $("input[type=radio][name='gender'][value=" + student.gender + "]").prop('checked', true);
-                $("#birthday").val(student.birthday);
-                $("#avatar").val();
                 $('#imgPreview').attr('src', 'images/' + student.avatar);
-                $("#faculty_id").val(student.faculty_id);
                 $("#studentEditModal").modal("toggle");
             });
         }
 
         $("#studentEditForm").submit(function(e) {
             e.preventDefault();
-            let id = $("#id").val();
-            let name = $("#name").val();
-            let slug = $("#slug").val();
-            let phone = $("#phone").val();
-            let email = $("#email").val();
-            let gender = $("input[name='gender']:checked").val();
-            let birthday = $("#birthday").val();
-            let faculty_id = $('select[name="faculty_id"]').val();
-            let avatar = $('#avatar')[0];
-            let _token = $("input[name=_token]").val();
 
-            formData = new FormData();
+            formData = new FormData($("#studentEditForm")[0])
 
-            formData.append('id', id);
-            formData.append('name', name);
-            formData.append('slug', slug);
-            formData.append('phone', phone);
-            formData.append('email', email);
-            formData.append('gender', gender);
-            formData.append('birthday', birthday);
-            formData.append('faculty_id', faculty_id);
-            formData.append('avatar', avatar.files[0]);
-            formData.append('_token', _token);
+            formData.append('avatar', avatar.files[0])
+            formData.append('_token', $("input[name=_token]").val())
 
             $.ajax({
                 url: "{{ route('student.update') }}",
@@ -217,6 +208,7 @@
                     let faculty_id = $("#faculty_id option:selected").text();
                     $("#tr" + data.id + ' td:nth-child(7)').text(faculty_id);
                     $("#tr" + data.id + ' #ajax').attr("href", window.location.href + '/' + data.slug);
+                    // alert(message)
                     $("#studentEditModal").modal("toggle");
                     $("#studentEditForm")[0].reset();
                 }

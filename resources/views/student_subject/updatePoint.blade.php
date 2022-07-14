@@ -32,17 +32,21 @@
                                     <div class="form-group col-4 mb-2">
                                         <select name="subject_id[]" id="subject_id" class="form-select subject_id">
                                             <option>Select Subject</option>
-                                            <option value="{{ $donesubject->id }}" {{ $donesubject->id ? 'selected' : '' }}>{{ $donesubject->name }}</option>
+                                            <option value="{{ $donesubject->id }}"
+                                                {{ $donesubject->id ? 'selected' : '' }}>{{ $donesubject->name }}
+                                            </option>
                                             @foreach ($subjects as $subject)
-                                                <option value="{{ $subject->id }}" >{{ $subject->name }}</option>
+                                                <option value="{{ $subject->id }}">{{ $subject->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
                                     <div class="form-group col-4 mb-2">
-                                        <input type="text" name="point[]" id="point" class="form-control point" value="{{ old('point.' . $key) }}" autofocus>
+                                        <input type="text" name="point[]" id="point" class="form-control point"
+                                            value="{{ old('point.' . $key) }}" autofocus>
                                     </div>
                                     <div class="form-group col-2 mb-2">
-                                        <button type="button" class="btn btn-danger delete"><i class="fa-regular fa-trash-can"></i></button>
+                                        <button type="button" class="btn btn-danger delete"><i
+                                                class="fa-regular fa-trash-can"></i></button>
                                     </div>
                                 </div>
                             @endforeach
@@ -52,7 +56,8 @@
                 <div class="col-md-12 text-center">
                     <button type="submit" class="btn btn-primary" id="submitbtn">Save</button>
                 </div>
-                <p class="text-danger d-none m-2 fst-italic"><i class="fa-solid fa-circle-xmark text-danger m-1"></i>Bạn đã add hết môn rồi!</p>
+                <p class="text-danger d-none m-2 fst-italic"><i class="fa-solid fa-circle-xmark text-danger m-1"></i>Bạn đã
+                    add hết môn rồi!</p>
             </form>
         </div>
     </main>
