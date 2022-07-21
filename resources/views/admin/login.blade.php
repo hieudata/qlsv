@@ -13,6 +13,7 @@
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <title>Document</title>
 </head>
+
 <body>
     <main>
         <div class="container">
@@ -33,19 +34,20 @@
                                         <h5 class="card-title text-center pb-0 fs-4">Login to Your Account</h5>
                                         <p class="text-center small">Enter your email & password to login</p>
                                     </div>
-                                    <form class="row g-3 needs-validation" method="POST" action="{{ route('login.custom') }}">
+                                    <form class="row g-3 needs-validation" method="POST"
+                                        action="{{ route('login.custom') }}">
                                         @csrf
                                         <div class="col-12">
                                             <label for="yourUsername" class="form-label">Email</label>
                                             <div class="input-group has-validation">
-                                                <input type="text" placeholder="Email" id="email" class="form-control"
-                                        name="email" required autofocus>
+                                                <input type="text" placeholder="Email" id="email"
+                                                    class="form-control" name="email" required autofocus>
                                             </div>
                                         </div>
                                         <div class="col-12">
                                             <label for="yourPassword" class="form-label">Password</label>
-                                            <input type="password" placeholder="Password" id="password" class="form-control"
-                                        name="password" required>
+                                            <input type="password" placeholder="Password" id="password"
+                                                class="form-control" name="password" required>
                                         </div>
                                         <div class="col-12">
                                             <div class="form-check">
@@ -62,6 +64,14 @@
                                                     href="{{ route('register-user') }}">Create
                                                     an account</a></p>
                                         </div>
+                                        <div class="col-12">
+                                            <a class="btn btn-danger w-100" type="submit"><i
+                                                    class="fa-brands fa-google-plus-g"></i> Login with Google</a>
+                                        </div>
+                                        <div class="col-12">
+                                            <a href="{{ route('github') }}" class="btn btn-dark w-100"
+                                                type="submit"><i class="fa-brands fa-github"></i> Login with Github</a>
+                                        </div>
                                     </form>
                                 </div>
                             </div>
@@ -72,4 +82,5 @@
         </div>
     </main>
 </body>
+
 </html>

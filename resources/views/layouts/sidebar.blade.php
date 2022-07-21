@@ -22,10 +22,10 @@
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                         <li><a class="dropdown-item" href="{{ route('locale', ['locale' => 'en']) }}"><img
                                     src="https://cdn-icons-png.flaticon.com/512/330/330425.png" width="20px">
-                                English</a></li>
+                                @lang('english')</a></li>
                         <li><a class="dropdown-item" href="{{ route('locale', ['locale' => 'vi']) }}"><img
                                     src="https://cdn-icons-png.flaticon.com/512/206/206632.png" width="20px">
-                                Vietnamese</a></li>
+                                @lang('vietnamese')</a></li>
                     </ul>
                 </div>
             </li><!-- End Search Icon-->

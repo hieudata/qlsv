@@ -94,15 +94,17 @@
                                     <td>{{ $student->birthday }}</td>
                                     <td>{{ $student->faculty->name }}</td>
                                     <td>
-                                        {!! Form::model($student, ['route' => ['students.destroy', $student->id], 'method' => 'DELETE']) !!}
+                                        {{-- {!! Form::model($student, ['route' => ['students.destroy', $student->id], 'method' => 'DELETE']) !!} --}}
                                         <a class="btn btn-info" href="{{ route('student.slug', $student->slug) }}"
                                             id="ajax"><i class="fa-regular fa-eye"></i></a>
                                         <a class="btn btn-warning" href="{{ route('students.edit', $student->id) }}"><i
                                                 class="fa-regular fa-pen-to-square"></i></a>
                                         <a class="btn btn-success" href="javascript:void(0)"
                                             onclick="editStudent({{ $student->id }})"><i class="fa-solid fa-pen"></i></a>
-                                        {!! Form::button('<i class="fa-regular fa-trash-can"></i>', ['type' => 'submit', 'class' => 'btn btn-danger']) !!}
-                                        {!! Form::close() !!}
+                                        {{-- {!! Form::button('<i class="fa-regular fa-trash-can"></i>', ['type' => 'submit', 'class' => 'btn btn-danger']) !!} --}}
+                                        <button class="btn btn-danger btn-delete"
+                                            data-url="{{ route('students.destroy', $student) }}">Delete</button>
+                                        {{-- {!! Form::close() !!} --}}
                                 </tr>
                             @endforeach
                         </tbody>
@@ -170,6 +172,7 @@
             </div>
         </div>
     </main>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         function editStudent(id) {
             $.get('students/ajax/' + id, function(student) {
@@ -208,11 +211,42 @@
                     let faculty_id = $("#faculty_id option:selected").text();
                     $("#tr" + data.id + ' td:nth-child(7)').text(faculty_id);
                     $("#tr" + data.id + ' #ajax').attr("href", window.location.href + '/' + data.slug);
-                    // alert(message)
                     $("#studentEditModal").modal("toggle");
                     $("#studentEditForm")[0].reset();
                 }
             });
+
         });
+        $(document).on('click', '.btn-delete', function() {
+            $this = $(this);
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    $.post($this.data('url'), {
+                        _method: 'DELETE',
+                        _token: '{{ csrf_token() }}'
+                    }, function(res) {
+                        $this.closest('tr').fadeOut(500, function() {
+                            $(this).remove();
+                        })
+                    })
+                }
+            })
+        })
     </script>
 @endsection

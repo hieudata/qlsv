@@ -21,8 +21,8 @@ Route::resources([
 Route::controller(StudentController::class)->group(function () {
     Route::get('students/{id}/addSubject', 'addSubject')->name('addSubject');
     Route::post('students/{id}', 'saveSubject')->name('saveSubject');
-    Route::get('students/{id}/updatePoint', 'updatePoint2')->name('updatePoint');
-    Route::post('students/{id}/point', 'savePoint')->name('savePoint');
+    Route::get('students/{id}/points', 'updatePoint')->name('updatePoint');
+    Route::post('students/{id}/points', 'savePoint')->name('savePoint');
     Route::get('student/login', 'login')->name('student.login');
     Route::post('student/check', 'check')->name('student.check');
     Route::get('student/dashboard', 'dashboard');
@@ -49,5 +49,5 @@ Route::controller(GoogleSocialiteController::class)->group(function () {
     Route::get('home', 'signOut')->name('singOut');
 });
 
-Route::get('auth/github', [GithubSocialiteController::class, 'gitRedirect']);
+Route::get('auth/github', [GithubSocialiteController::class, 'gitRedirect'])->name('github');
 Route::get('auth/github/callback', [GithubSocialiteController::class, 'gitCallback']);

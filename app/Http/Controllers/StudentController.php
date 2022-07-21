@@ -247,7 +247,7 @@ class StudentController extends Controller
             'data' => $student,
             'message' => "Update success"
         ];
-        
+
         return response()->json($data);
     }
 
@@ -287,28 +287,31 @@ class StudentController extends Controller
     }
 
     // Update Point
+
     public function updatePoint($id)
     {
-        $student = $this->studentRepo->query()->where('id', $id)->first();
-        return view('student_subject.updatePoint', compact('student'));
-    }
-
-    public function updatePoint2($id)
-    {
-        $student = $this->studentRepo->query()->where('id', $id)->first();
+        $points = [];
+        $subject_ids = [];
+        $student = $this->studentRepo->find($id);
+        $allSubject = ['' => 'Select Subject'] + $this->subjectRepo->getAll()->pluck('name', 'id')->toArray();
         $subjects = $this->subjectRepo->getAll();
-        $donesubjects = $this->studentRepo->find($id)->subjects()->get();
-        return view('student_subject.updatePoint', compact('student', 'subjects', 'donesubjects'));
+        $selectedSubjects  = $student->subjects()->get();
+        
+        foreach ($selectedSubjects as $selectedSubject) {
+            $points[] = $selectedSubject->pivot->point;
+            $subject_ids[] = $selectedSubject->pivot->subject_id;
+        }
+        return view('student_subject.updatePoint', compact('student', 'allSubject', 'subject_ids', 'points', 'subjects'));
     }
 
     public function savePoint(PointRequest $request, $id)
     {
-        if (isset($request->subject_id)) {
+        if (isset($request->subject_ids)) {
             $data = [];
-            foreach ($request->subject_id as $key => $value) {
+            foreach ($request->subject_ids as $key => $value) {
                 array_push($data, [
-                    'subject_id' => $request->subject_id[$key],
-                    'point' => $request->point[$key],
+                    'subject_id' => $request->subject_ids[$key],
+                    'point' => $request->points[$key],
                 ]);
             }
             $points = [];
@@ -316,7 +319,7 @@ class StudentController extends Controller
                 $points[$value['subject_id']] = ['point' => $value['point']];
             }
             $this->studentRepo->find($id)->subjects()->sync($points);
-            dd("Success");
+            return redirect()->back();
         } else {
             $this->studentRepo->find($id)->subjects()->detach();
         }
