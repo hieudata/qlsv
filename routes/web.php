@@ -9,6 +9,9 @@ use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GithubSocialiteController;
 
+Route::get('/', function(){
+    return view('admin.login');
+});
 Route::resources([
     'faculties' => FacultyController::class,
     'students' => StudentController::class,

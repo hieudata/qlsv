@@ -85,7 +85,7 @@
                         <tbody>
                             @foreach ($students as $key => $student)
                                 <tr id="tr{{ $student->id }}">
-                                    <td>{{ $student->id }}</td>
+                                    <td>{{ ++$key }}</td>
                                     <td><img src="{{ asset('images/' . $student->avatar) }}" alt="" width="80px"
                                             class="rounded-circle"></td>
                                     <td>{{ $student->name }}</td>
@@ -94,17 +94,15 @@
                                     <td>{{ $student->birthday }}</td>
                                     <td>{{ $student->faculty->name }}</td>
                                     <td>
-                                        {{-- {!! Form::model($student, ['route' => ['students.destroy', $student->id], 'method' => 'DELETE']) !!} --}}
                                         <a class="btn btn-info" href="{{ route('student.slug', $student->slug) }}"
                                             id="ajax"><i class="fa-regular fa-eye"></i></a>
                                         <a class="btn btn-warning" href="{{ route('students.edit', $student->id) }}"><i
                                                 class="fa-regular fa-pen-to-square"></i></a>
                                         <a class="btn btn-success" href="javascript:void(0)"
                                             onclick="editStudent({{ $student->id }})"><i class="fa-solid fa-pen"></i></a>
-                                        {{-- {!! Form::button('<i class="fa-regular fa-trash-can"></i>', ['type' => 'submit', 'class' => 'btn btn-danger']) !!} --}}
                                         <button class="btn btn-danger btn-delete"
-                                            data-url="{{ route('students.destroy', $student) }}">Delete</button>
-                                        {{-- {!! Form::close() !!} --}}
+                                            data-url="{{ route('students.destroy', $student) }}"><i
+                                                class="fa-regular fa-trash-can"></i></button>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -123,8 +121,7 @@
                         <h5 class="modal-title text-white">Edit Student</h5>
                         <button type="button" class="btn-close h3" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    @yield('success')
-                    <div class="alert alert-danger" style="display:none"></div>
+                    <div class="alert alert-danger alert-dismissible fade show d-none" id="fault"></div>
                     <div class="modal-body">
                         <form id="studentEditForm">
                             @csrf
@@ -194,7 +191,12 @@
             formData = new FormData($("#studentEditForm")[0])
 
             formData.append('avatar', avatar.files[0])
-            formData.append('_token', $("input[name=_token]").val())
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
 
             $.ajax({
                 url: "{{ route('student.update') }}",
@@ -202,17 +204,26 @@
                 contentType: false,
                 processData: false,
                 data: formData,
-                success: function(data) {
-                    $("#tr" + data.id + ' img')[0].src = "{{ asset('images') }}" + '/' + data.avatar;
+                success: function(
+                    data
+                ) {
+                    $("#tr" + data.id + ' img')[0].src = "{{ asset('images') }}" + '/' + data
+                        .avatar;
                     $("#tr" + data.id + ' td:nth-child(3)').text(data.name);
                     $("#tr" + data.id + ' td:nth-child(4)').html(data.phone);
-                    $("#tr" + data.id + ' td:nth-child(5)').html(data.gender == 1 ? "Male" : "Female");
+                    $("#tr" + data.id + ' td:nth-child(5)').html(data.gender == 1 ? "Male" :
+                        "Female");
                     $("#tr" + data.id + ' td:nth-child(6)').html(data.birthday);
                     let faculty_id = $("#faculty_id option:selected").text();
                     $("#tr" + data.id + ' td:nth-child(7)').text(faculty_id);
                     $("#tr" + data.id + ' #ajax').attr("href", window.location.href + '/' + data.slug);
                     $("#studentEditModal").modal("toggle");
                     $("#studentEditForm")[0].reset();
+                },
+                error: function(data) {
+                    $.each(data.responseJSON.errors, function(key, value) {
+                        $('#fault').removeClass('d-none').append('<div>' + value + '</div>');
+                    });
                 }
             });
 

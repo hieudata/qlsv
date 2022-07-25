@@ -5,12 +5,17 @@
         option:disabled {
             display: none;
         }
+
+        em {
+            color: red;
+            font-size: 15px;
+        }
     </style>
     @php
-        if(!empty(old('subject_ids'))){
-            $subject_ids = old('subject_ids');
-            $points = old('points');
-        }
+    if (!empty(old('subject_ids'))) {
+        $subject_ids = old('subject_ids');
+        $points = old('points');
+    }
     @endphp
     <main id="main" class="main">
         <div class="card shadow m-3 p-3">
@@ -20,39 +25,44 @@
             </div>
             @yield('error')
             <h3>Student: {{ $student->name }} - ID: {{ $student->id }}</h3>
-            {!! Form::open(array('route' => ['savePoint', $student->id],'method' => 'post','enctype' => "multipart/form-data", 'id' => 'formSubmit')) !!}
-                @csrf
-                <div class="table table-sm">
-                    <div class="thead">
-                        <div class="row ms-2">
-                            <div class="form-group col-4">Subject</div>
-                            <div class="form-group col-4">Point</div>
-                            <div class="form-group col-4">Delete</div>
-                        </div>
+            {!! Form::open([
+                'route' => ['savePoint', $student->id],
+                'method' => 'post',
+                'enctype' => 'multipart/form-data',
+                'id' => 'formSubmit',
+            ]) !!}
+            <div class="table table-sm">
+                <div class="thead">
+                    <div class="row ms-2">
+                        <div class="form-group col-4">Subject</div>
+                        <div class="form-group col-4">Point</div>
+                        <div class="form-group col-4">Delete</div>
                     </div>
-                    <div class="addMore">
-                        <div class="m-2">
-                            @foreach ($points as $key => $point)
-                                <div class="row">
-                                    <div class="form-group col-4 mb-2">
-                                        {!! Form::select('subject_ids[]', $allSubject, (int)$subject_ids[$key], ['class' => 'form-select subject_id']) !!}
-                                    </div>
-                                    <div class="form-group col-4 mb-2">
-                                        {!! Form::text('points[]', $point , ['class' => 'form-control']) !!}
-                                    </div>
-                                    <div class="form-group col-2 mb-2">     
-                                        <button type="button" class="btn btn-danger delete"><i class="fa-regular fa-trash-can"></i></button>
-                                    </div>
+                </div>
+                <div class="addMore">
+                    <div class="m-2">
+                        @foreach ($points as $key => $point)
+                            <div class="row">
+                                <div class="form-group col-4 mb-2">
+                                    {!! Form::select('subject_ids[]', $allSubject, (int) $subject_ids[$key], ['class' => 'form-select subject_id']) !!}
                                 </div>
-                            @endforeach     
-                        </div>
+                                <div class="form-group col-4 mb-2">
+                                    {!! Form::text('points[]', $point, ['class' => 'form-control checkpoint']) !!}
+                                </div>
+                                <div class="form-group col-2 mb-2">
+                                    <button type="button" class="btn btn-danger delete"><i
+                                            class="fa-regular fa-trash-can"></i></button>
+                                </div>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
-                <div class="col-md-12 text-center">
-                    <button type="submit" class="btn btn-primary" id="submitbtn">Save</button>
-                </div>
-                <p class="text-danger d-none m-2 fst-italic"><i class="fa-solid fa-circle-xmark text-danger m-1"></i>Bạn đã
-                    add hết môn rồi!</p>
+            </div>
+            <div class="col-md-12 text-center">
+                {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
+            </div>
+            <p class="text-danger d-none m-2 fst-italic"><i class="fa-solid fa-circle-xmark text-danger m-1"></i>Bạn đã
+                add hết môn rồi!</p>
             {!! Form::close() !!}
         </div>
     </main>
@@ -94,7 +104,7 @@
                     `</select>` +
                     `</div>` +
                     `<div class="form-group col-4 mb-2">` +
-                    `<input type="text" name="points[]" id="point" class="form-control point">` +
+                    `<input type="text" name="points[]" id="point" class="form-control checkpoint">` +
                     `</div>` +
                     `<div class="form-group col-2 mb-2">` +
                     `<button type="button" class="btn btn-danger delete"><i class="fa-regular fa-trash-can"></i></button>` +
@@ -111,6 +121,22 @@
                 $("button.add-select").removeClass('d-none');
                 $("main#main p").addClass('d-none');
                 updateSelects()
+            });
+            $("#formSubmit").keyup(function(e) {
+                e.preventDefault();
+                var reg = new RegExp('^[0-9]+$');
+                var points = $('[name="points[]"]');
+                $("em").remove();
+                
+                for (i = 0; i < points.length; i++) {
+                    if (points[i].value == '') {
+                        $('.checkpoint').eq(i).after('<em>*Required</em>')
+                    } else if (points[i].value < 0 || points[i].value > 10) {
+                        $('.checkpoint').eq(i).after('<em>*Point range from 0 to 10</em>')
+                    } else if (reg.test(points[i].value) === false) {
+                        $('.checkpoint').eq(i).after('<em>*Invail</em>')
+                    }
+                }
             });
         });
     </script>

@@ -2,9 +2,8 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Student;
-use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StudentRequest extends FormRequest
 {
@@ -27,9 +26,14 @@ class StudentRequest extends FormRequest
     {
         $data = [
             'name' => 'required|max:55',
-            'phone' => 'required|unique:students,phone|max:15',
+            'phone' => 'required|numeric|min:15',
+            // 'phone' => [
+            //     'required',
+            //     'numeric',
+            //     Rule::unique('students')->ignore($this->id)
+            // ],
             'gender' => 'required',
-            'email' => 'required|email|unique:students,email',
+            'email' => 'required|email|unique:students,email,'.$this->id,
             'birthday' => 'required|date|before:01/01/2100|after:01/01/1900',
             'faculty_id' => 'required',
         ];
@@ -46,6 +50,7 @@ class StudentRequest extends FormRequest
         return [
             'email.unique' => 'This email was in existence.',
             'phone.unique' => 'This phone was in existence.',
+            'faculty_id.required' => 'Choose faculty'
         ];
     }
 }

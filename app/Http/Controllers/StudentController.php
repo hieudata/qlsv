@@ -12,8 +12,6 @@ use Cviebrock\EloquentSluggable\Services\SlugService;
 use App\Mail\MyTestMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
 
 class StudentController extends Controller
 {
@@ -64,8 +62,6 @@ class StudentController extends Controller
             $profileImage = rand(1111, 9999) . "." . $avatar->getClientOriginalExtension();
             $avatar->move('images', $profileImage);
             $input['avatar'] = "$profileImage";
-        } else {
-            $input['avatar'] = 'default.png';
         }
         // $input['password'] = Str::random(10);
         $this->studentRepo->create($input);
@@ -228,7 +224,7 @@ class StudentController extends Controller
         return response()->json($student);
     }
 
-    public function updateStudent(Request $request)
+    public function updateStudent(StudentRequest $request)
     {
         $student = $this->studentRepo->find($request->id);
         $input = $request->all();
@@ -241,14 +237,9 @@ class StudentController extends Controller
         } else {
             unset($input['avatar']);
         }
-        $data = [];
         $student->update($input);
-        $data = [
-            'data' => $student,
-            'message' => "Update success"
-        ];
 
-        return response()->json($data);
+        return response()->json($student);
     }
 
     //Localization
@@ -256,16 +247,6 @@ class StudentController extends Controller
     {
         Session::put('locale', $locale);
         return redirect()->back();
-    }
-
-    public function getLanguage()
-    {
-        $en = DB::table('languages')->pluck('english', '_key');
-        $vi = DB::table('languages')->pluck('vietnamese', '_key');
-        $jsonEN = json_encode($en, JSON_UNESCAPED_UNICODE);
-        $jsonVi = json_encode($vi, JSON_UNESCAPED_UNICODE);
-        file_put_contents(base_path('resources/lang/en.json'), stripslashes($jsonEN));
-        file_put_contents(base_path('resources/lang/vi.json'), stripslashes($jsonVi));
     }
 
     // Add&Edit Subject
@@ -296,7 +277,7 @@ class StudentController extends Controller
         $allSubject = ['' => 'Select Subject'] + $this->subjectRepo->getAll()->pluck('name', 'id')->toArray();
         $subjects = $this->subjectRepo->getAll();
         $selectedSubjects  = $student->subjects()->get();
-        
+
         foreach ($selectedSubjects as $selectedSubject) {
             $points[] = $selectedSubject->pivot->point;
             $subject_ids[] = $selectedSubject->pivot->subject_id;
